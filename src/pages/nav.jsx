@@ -65,20 +65,13 @@ const Navigation = () => {
           </ul>
 
           <div className="navbar-auth">
-            <a href="/signup" className="auth-button signup">
-              {hours}
-            </a>
+            <p className="auth-button signup">{hours}</p>
           </div>
         </div>
 
         {isMenuOpen && (
           <div className="navbar-auth-mobile">
-            <a href="/login" className="auth-button login">
-              Login
-            </a>
-            <a href="/signup" className="auth-button signup">
-              {hours}{" "}
-            </a>
+            <p className="auth-button signup">{hours}</p>
           </div>
         )}
       </div>

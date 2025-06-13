@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../uniqueStyles/userAccount.css";
-import { IoCloseSharp } from "react-icons/io5";
+import { IoCloseSharp, IoEye, IoEyeOffSharp } from "react-icons/io5";
 import { IoMdCheckmark } from "react-icons/io";
 import {
   isLowerCaseAdded,
@@ -12,10 +12,16 @@ import {
 const UserAccount = () => {
   const [logedInUser, setLogedInUser] = useState({});
   const [profilePic, setProfilePic] = useState("");
+  const [showPasswordErr, setShowPasswordErr] = useState(false);
+  const [showRepeatPasswordErr, setShowRepeatPasswordErr] = useState(false);
+  const [showNamesErr, setShowNamesErr] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [values, setValues] = useState({
     fullName: "",
-    email: "",
+
     password: "",
     repeatPassword: "",
   });
@@ -34,11 +40,10 @@ const UserAccount = () => {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData") || "[]");
+    const loggedInAccountID = localStorage.getItem("accountID");
 
     const loggedInUser = userData.find(
-      (user) =>
-        user.accountID ===
-        "codes@gmail.com7.0669923995466562025-05-28T04:53:14.405Z"
+      (user) => user.accountID === loggedInAccountID
     );
     if (loggedInUser) {
       setLogedInUser(loggedInUser);
@@ -91,25 +96,27 @@ const UserAccount = () => {
 
   const onsubmitHandler = (e) => {
     e.preventDefault();
-    if (!values.fullName) return alert("input full name");
-
-    if (!values.email) return alert("please input email");
-    if (!values.password) return alert("Please input password");
-
-    if (!values.repeatPassword) return alert("please input repeat password");
-
+    if (!values.fullName) return setShowNamesErr("Input full name");
+    setShowNamesErr("");
+    if (!values.password) return setShowPasswordErr("Please input password");
+    setShowPasswordErr("");
+    if (!values.repeatPassword)
+      return setShowRepeatPasswordErr("please input repeat password");
+    setShowRepeatPasswordErr("");
     const accounts = JSON.parse(localStorage.getItem("userData"));
-    console.log(accounts);
-    if (!isPasswordValid) return alert("invalid password");
+
+    if (!isPasswordValid) return setShowPasswordErr("invalid password");
+    setShowPasswordErr("");
     if (values.password !== values.repeatPassword)
-      return alert("Passwords do not match");
+      return setShowRepeatPasswordErr("Passwords do not match");
+    setShowRepeatPasswordErr("");
 
     const updatedAccounts = accounts.map((account) => {
       if (account.accountID === logedInUser.accountID) {
         return {
           ...account,
           fullname: values.fullName,
-          email: values.email,
+
           password: values.password,
         };
       }
@@ -156,6 +163,34 @@ const UserAccount = () => {
         />
 
         <form className="account-form" onSubmit={onsubmitHandler}>
+          <p className="error-acc-names">{showNamesErr}</p>
+          <p className="error-password">{showPasswordErr}</p>
+          <p className="error-repeat-password">{showRepeatPasswordErr}</p>
+
+          {showPassword ? (
+            <IoEye
+              className="account-password-eye"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          ) : (
+            <IoEyeOffSharp
+              className="account-password-eye"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          )}
+
+          {showConfirmPassword ? (
+            <IoEye
+              className="account-confirm-password-eye"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
+          ) : (
+            <IoEyeOffSharp
+              className="account-confirm-password-eye"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
+          )}
+
           <div className="form-group">
             <label htmlFor="fullName" className="form-label">
               Full Name
@@ -167,7 +202,12 @@ const UserAccount = () => {
               onChange={handleChange}
               id="fullName"
               className="form-input"
-              placeholder="munir ahmed"
+              placeholder={logedInUser.fullname}
+              style={
+                showNamesErr.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
             />
           </div>
 
@@ -178,11 +218,11 @@ const UserAccount = () => {
             <input
               type="email"
               name="email"
-              value={values.email}
-              onChange={handleChange}
               id="email"
               className="form-input"
-              placeholder="munir@example.com"
+              placeholder={logedInUser.email || "munir@gmail.com"}
+              disabled
+              value={logedInUser.email || ""}
             />
           </div>
 
@@ -191,13 +231,18 @@ const UserAccount = () => {
               New Password
             </label>
             <input
-              type="password"
+              type={!showPassword ? "password" : "text"}
               name="password"
               value={values.password}
               onChange={handleChange}
               id="password"
               className="form-input"
               placeholder="••••••••"
+              style={
+                showPasswordErr.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
             />
           </div>
 
@@ -310,13 +355,18 @@ const UserAccount = () => {
               Confirm Password
             </label>
             <input
-              type="password"
+              type={!showConfirmPassword ? "password" : "text"}
               name="repeatPassword"
               value={values.repeatPassword}
               onChange={handleChange}
               id="confirmPassword"
               className="form-input"
               placeholder="••••••••"
+              style={
+                showRepeatPasswordErr.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
             />
           </div>
 

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import "../uniqueStyles/auth.css";
 import { NavLink } from "react-router-dom";
+import { IoEye, IoEyeOffSharp } from "react-icons/io5";
 
-const LoginForm = ({ setShowApp, setShowSignUp }) => {
+const LoginForm = ({ setShowApp }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -14,25 +15,60 @@ const LoginForm = ({ setShowApp, setShowSignUp }) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
+
+  const checkRequirement = (values) => {
+    const { email, password } = values;
+    if (!email) {
+      setEmailError("Please enter your email address");
+      return false;
+    } else {
+      setEmailError("");
+    }
+    if (!password) {
+      setPasswordError("Please enter your password");
+      return false;
+    } else {
+      setPasswordError("");
+    }
+    return true;
+  };
+
+  const checkUserData = () => {
+    let userData = JSON.parse(localStorage.getItem("userData"));
+    if (!userData) {
+      setEmailError("No user data found. Please sign up first.");
+      return false;
+    }
+    return true;
+  };
+
+  const getLoggedInUserAndCheckRequirements = () => {
+    let userData = JSON.parse(localStorage.getItem("userData"));
+    if (!userData) {
+      setEmailError("No user data found. Please sign up first.");
+      return false;
+    }
+    const user = userData.find((user) => user.email === values.email);
+    if (!user) {
+      setEmailError("Invalid email");
+      return false;
+    }
+    if (user.password !== values.password) {
+      setPasswordError("Wrong password!");
+      return false;
+    }
+    return true;
+  };
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    const { email, password } = values;
-    if (!email) return alert("Please enter your email address");
-
-    if (!password) return alert("Please enter your password");
-
-    let userData = JSON.parse(localStorage.getItem("userData"));
-    console.log(userData);
-    if (!userData) return alert("No user data found. Please sign up first.");
-    const user = userData.find((user) => user.email === email);
-
-    if (!user) return alert("Invalid email");
-    const { password: userPassword, managerCode } = user;
+    if (!checkRequirement(values)) return;
+    if (!checkUserData()) return;
+    if (!getLoggedInUserAndCheckRequirements()) return;
 
     localStorage.setItem("managerCode", managerCode);
     localStorage.setItem("logedInEmail", user.email);
-
-    if (userPassword !== password) return alert("Wrong password!");
+    localStorage.setItem("accountID", user.accountID);
 
     setValues({ email: "", password: "" });
 
@@ -45,6 +81,19 @@ const LoginForm = ({ setShowApp, setShowSignUp }) => {
         <h2 className="auth-title">Login to Your Account</h2>
 
         <form className="auth-form" onSubmit={onSubmitHandler}>
+          <p className="login-email-error">{emailError}</p>
+          <p className="login-password-error">{passwordError}</p>
+          {showPassword ? (
+            <IoEye
+              className="login-password-eye"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          ) : (
+            <IoEyeOffSharp
+              className="login-password-eye"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          )}
           <div className="form-group">
             <label htmlFor="loginEmail" className="form-label">
               Email Address
@@ -57,6 +106,11 @@ const LoginForm = ({ setShowApp, setShowSignUp }) => {
               id="loginEmail"
               className="form-input"
               placeholder="munir@example.com"
+              style={
+                emailError.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
             />
           </div>
 
@@ -65,13 +119,18 @@ const LoginForm = ({ setShowApp, setShowSignUp }) => {
               Password
             </label>
             <input
-              type="password"
+              type={!showPassword ? "password" : "text"}
               name="password"
               onChange={handleChange}
               value={values.password}
               id="loginPassword"
               className="form-input"
               placeholder="••••••••"
+              style={
+                passwordError.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
             />
           </div>
 

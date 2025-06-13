@@ -6,18 +6,27 @@ const ParkingHomepage = () => {
     <div className="parking-container">
       <section className="hero-section">
         <div className="hero-content">
-          <h1 className="hero-title">Smart Parking Solutions</h1>
-          <p className="hero-subtitle">
-            Find, book, and manage parking with ease
+          <h1 className="hero-title">Find and Reserve Parking</h1>
+          <p className="hero-text">
+            Skip the stress of circling the block. Our smart parking app helps
+            you instantly locate available spots near your destination—whether
+            you're heading to work, a concert, or just out for errands.
           </p>
-          <NavLink to={"/entry"} className="cta-button primary">
-            Find Parking Now
+
+          <p className="hero-text">
+            With real-time updates, secure payments, and easy reservations,
+            parking has never been simpler. Start saving time and fuel—find your
+            next parking space with just a few taps.
+          </p>
+
+          <NavLink to={"/entry"} className="hero-link">
+            find parking
           </NavLink>
         </div>
         <img
-          className="hero-image"
-          src="img/urban-park.jpg"
-          alt="Parking garage"
+          className="about-image hero-image"
+          src="img/park-lot.jpg"
+          alt="Parking facility"
         />
       </section>
 
@@ -115,21 +124,21 @@ const ParkingHomepage = () => {
               "Finding parking downtown used to be a nightmare. Now I can
               reserve a spot before I even leave home!"
             </p>
-            <p className="testimonial-author">- Sarah J.</p>
+            <p className="testimonial-author">- Adam B.</p>
           </div>
           <div className="testimonial-card">
             <p className="testimonial-text">
               "The monthly parking pass has saved me so much time and money.
               Highly recommended!"
             </p>
-            <p className="testimonial-author">- Michael T.</p>
+            <p className="testimonial-author">- Aliah K.</p>
           </div>
           <div className="testimonial-card">
             <p className="testimonial-text">
               "Airport parking was never this easy. The valet service is worth
               every penny."
             </p>
-            <p className="testimonial-author">- David L.</p>
+            <p className="testimonial-author">- Codesmann S.</p>
           </div>
         </div>
       </section>

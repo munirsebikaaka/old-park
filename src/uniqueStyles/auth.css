@@ -8,7 +8,7 @@
 }
 
 .auth-card {
-  background-color: white;
+  background-color: var(--secondary-color);
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
   padding: 2.5rem;
@@ -17,7 +17,7 @@
 }
 
 .auth-title {
-  color: var(--primary-color);
+  color: var(--text-color);
   text-align: center;
   margin-bottom: 2rem;
   font-size: 1.8rem;
@@ -28,6 +28,7 @@
   flex-direction: column;
   gap: 0.5rem;
   font-family: var(--font-family);
+  position: relative;
 }
 
 .auth-button {
@@ -77,12 +78,59 @@
 .passwordCheck P {
   font-size: 13px;
   font-family: Outfit;
-  color: var(--login-el-color);
+  color: var(--text-color);
   display: flex;
   align-items: center;
   gap: 3px;
   padding: 1px 0;
   text-transform: capitalize;
+}
+
+.signup-password-eye,
+.signup-confirm-password-eye,
+.login-password-eye,
+.account-password-eye,
+.account-confirm-password-eye {
+  position: absolute;
+  right: 10px;
+  top: 46.5%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 1.2rem;
+}
+
+.signup-confirm-password-eye {
+  top: 79%;
+}
+
+.login-password-eye {
+  top: 57%;
+}
+.account-password-eye {
+  top: 48.3%;
+}
+.account-confirm-password-eye {
+  top: 83.5%;
+}
+.form-group {
+  position: relative;
+}
+.namesErr,
+.emailErr,
+.contactErr,
+.identificationErr,
+.ageErr,
+.sexErr,
+.nationalityErr,
+.employeeIDErr,
+.passwordErr,
+.confirmPasswordErr {
+  position: absolute;
+  right: 1%;
+  color: #991b1b;
+  top: 36%;
+  font-size: 0.8rem;
 }
 
 @media (max-width: 768px) {

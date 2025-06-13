@@ -1,10 +1,9 @@
 import { useState } from "react";
 import "../uniqueStyles/parkingForms.css";
-import { toast, ToastContainer } from "react-toastify";
-import js from "@eslint/js";
 
 const VehicleExitForm = () => {
   const [values, setValues] = useState({ license: "" });
+  const [licenseError, setLicenseError] = useState("");
   const parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +51,6 @@ const VehicleExitForm = () => {
 
     if (dayTime()) isDayTime = true;
     if (nightTime()) isNightTime = true;
-
     if (
       isDayTime &&
       startParkingTime >= 6 &&
@@ -102,6 +100,20 @@ const VehicleExitForm = () => {
           2
         )} hours, u gona pay ${parkingCoast.toFixed(2)}`
       );
+
+      let leftParkingData = [];
+      leftParkingData =
+        JSON.parse(localStorage.getItem("leftParkingData")) || [];
+      const leftCar = parkingData.find(
+        (vehicle) => vehicle.license === values.license
+      );
+      leftParkingData.push(leftCar);
+      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
+
+      const updatedParkingData = parkingData.filter(
+        (vehicle) => vehicle.license !== values.license
+      );
+      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
     } else if (
       isDayTime &&
       startParkingTime < 6 &&
@@ -125,6 +137,20 @@ const VehicleExitForm = () => {
           2
         )} hours, u gona pay ${parkingCoast.toFixed(2)}`
       );
+
+      let leftParkingData = [];
+      leftParkingData =
+        JSON.parse(localStorage.getItem("leftParkingData")) || [];
+      const leftCar = parkingData.find(
+        (vehicle) => vehicle.license === values.license
+      );
+      leftParkingData.push(leftCar);
+      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
+
+      const updatedParkingData = parkingData.filter(
+        (vehicle) => vehicle.license !== values.license
+      );
+      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
     } else if (
       isNightTime &&
       startParkingTime >= 18 &&
@@ -136,6 +162,20 @@ const VehicleExitForm = () => {
           2
         )} hours, u gona pay ${parkingCoast.toFixed(2)}`
       );
+
+      let leftParkingData = [];
+      leftParkingData =
+        JSON.parse(localStorage.getItem("leftParkingData")) || [];
+      const leftCar = parkingData.find(
+        (vehicle) => vehicle.license === values.license
+      );
+      leftParkingData.push(leftCar);
+      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
+
+      const updatedParkingData = parkingData.filter(
+        (vehicle) => vehicle.license !== values.license
+      );
+      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
     } else if (
       isNightTime &&
       startParkingTime < 6 &&
@@ -147,6 +187,20 @@ const VehicleExitForm = () => {
           2
         )} hours, u gona pay ${parkingCoast.toFixed(2)}`
       );
+
+      let leftParkingData = [];
+      leftParkingData =
+        JSON.parse(localStorage.getItem("leftParkingData")) || [];
+      const leftCar = parkingData.find(
+        (vehicle) => vehicle.license === values.license
+      );
+      leftParkingData.push(leftCar);
+      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
+
+      const updatedParkingData = parkingData.filter(
+        (vehicle) => vehicle.license !== values.license
+      );
+      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
     } else if (
       isNightTime &&
       startParkingTime >= 6 &&
@@ -170,33 +224,45 @@ const VehicleExitForm = () => {
           2
         )} hours, u gona pay ${parkingCoast.toFixed(2)}`
       );
+
+      let leftParkingData = [];
+      leftParkingData =
+        JSON.parse(localStorage.getItem("leftParkingData")) || [];
+      const leftCar = parkingData.find(
+        (vehicle) => vehicle.license === values.license
+      );
+      leftParkingData.push(leftCar);
+      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
+
+      const updatedParkingData = parkingData.filter(
+        (vehicle) => vehicle.license !== values.license
+      );
+      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
     }
   };
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
     const { license } = values;
-    if (!license) return;
+    if (!license)
+      return setLicenseError("Please enter your license plate number");
     const data = parkingData.find((el) => el.license === license);
-
     if (data) {
       countMoneyPaid(data, "truck", 2, 3, 3, 2);
       countMoneyPaid(data, "car", 1, 2, 2, 1);
       countMoneyPaid(data, "motorcycle", 0.5, 1, 1, 0.5);
+      setValues({ license: "" });
+      setLicenseError("");
     } else {
-      alert("License plate not found");
+      setLicenseError("License plate not found");
     }
   };
 
   return (
     <div className="form-container">
-      <ToastContainer
-        position="top-center"
-        style={{ fontSize: "1px", fontFamily: "Outfit" }}
-      />
-
       <h2 className="form-title">Vehicle Exit</h2>
       <form className="parking-form" onSubmit={onSubmitHandler}>
+        <p className="exit-license-error">{licenseError}</p>
         <div className="form-group">
           <label htmlFor="exitPlateNumber" className="form-label">
             License Plate Number
@@ -209,6 +275,11 @@ const VehicleExitForm = () => {
             id="exitPlateNumber"
             className="form-input"
             placeholder="Enter plate number to exit"
+            style={
+              licenseError.length > 0
+                ? { border: "1px solid  #991b1b" }
+                : { border: "1px solid #d1d5db" }
+            }
           />
         </div>
 

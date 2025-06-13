@@ -13,9 +13,13 @@ const VehicleEntryForm = () => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
     const { license, vehicleType } = values;
-    if (!license) return alert("Please enter your license plate number");
+    if (!license)
+      return setLicenseError("Please enter your license plate number");
+    setLicenseError("");
 
-    if (!vehicleType) return alert("Please select your vehicle type");
+    if (!vehicleType)
+      return setVehicleTypeError("Please select your vehicle type");
+    setVehicleTypeError("");
 
     let parkingData = [];
     parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
@@ -32,6 +36,8 @@ const VehicleEntryForm = () => {
     <div className="form-container">
       <h2 className="form-title">Vehicle Entry</h2>
       <form className="parking-form" onSubmit={onSubmitHandler}>
+        <p className="error-park-lincense">{licenseErorr}</p>
+        <p className="error-park-type">{vehicleTypeErorr}</p>
         <div className="form-group">
           <label htmlFor="plateNumber" className="form-label">
             License Plate Number
@@ -44,6 +50,11 @@ const VehicleEntryForm = () => {
             id="plateNumber"
             className="form-input"
             placeholder=" ABC 1234"
+            style={
+              licenseErorr.length > 0
+                ? { border: "1px solid  #991b1b" }
+                : { border: "1px solid #d1d5db" }
+            }
           />
         </div>
 
@@ -57,6 +68,11 @@ const VehicleEntryForm = () => {
             name="vehicleType"
             onChange={handleChange}
             value={values.vehicleType}
+            style={
+              vehicleTypeErorr.length > 0
+                ? { border: "1px solid  #991b1b" }
+                : { border: "1px solid #d1d5db" }
+            }
           >
             <option value="">Select vehicle type</option>
             <option value="car">Car</option>
