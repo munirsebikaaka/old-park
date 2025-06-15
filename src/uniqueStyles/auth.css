@@ -85,6 +85,9 @@
   padding: 1px 0;
   text-transform: capitalize;
 }
+.form-group {
+  position: relative;
+}
 
 .signup-password-eye,
 .signup-confirm-password-eye,
@@ -105,7 +108,7 @@
 }
 
 .login-password-eye {
-  top: 57%;
+  top: 76%;
 }
 .account-password-eye {
   top: 48.3%;
@@ -113,9 +116,7 @@
 .account-confirm-password-eye {
   top: 83.5%;
 }
-.form-group {
-  position: relative;
-}
+
 .namesErr,
 .emailErr,
 .contactErr,

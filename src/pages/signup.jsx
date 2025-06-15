@@ -3,11 +3,11 @@ import "../uniqueStyles/auth.css";
 import { IoCloseSharp, IoEye, IoEyeOffSharp } from "react-icons/io5";
 import { IoMdCheckmark } from "react-icons/io";
 import {
-  isLowerCaseAdded,
-  isSymbolsAdded,
-  isUpperCaseAdded,
-  isNumsAdded,
-} from "../services/passwordStrength/passwordStrength";
+  checkIfAllInputsFilled,
+  isAllValuesAdded,
+} from "../services/auth/authSignup/checkIfAllInputsFilled";
+import { createUserDataArrayAndStoreInLocalStorage } from "../services/auth/authSignup/createDataArray";
+import { comparePasswords } from "../services/auth/authSignup/comparePassword";
 
 const SignupForm = () => {
   const [values, setValues] = useState({
@@ -43,169 +43,14 @@ const SignupForm = () => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
-  const isPasswordLengthOk = values.password.length >= 6;
-  const isPasswordValid =
-    isLowerCaseAdded(values.password) &&
-    isUpperCaseAdded(values.password) &&
-    isNumsAdded(values.password) &&
-    isSymbolsAdded(values.password) &&
-    isPasswordLengthOk;
-
-  const checkFilds = (value, setErrors, allFilled, error, message) => {
-    if (!value) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [error]: message || "This field is required",
-      }));
-      allFilled = false;
-    } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [error]: "",
-      }));
-    }
-  };
-
-  const checkIfAllInputsFilled = () => {
-    const {
-      fullname,
-      email,
-      password,
-      confirmPassword,
-      contact,
-      identification,
-      age,
-      sex,
-      nationality,
-      employeeID,
-    } = values;
-
-    let allFilled = true;
-    checkFilds(
-      fullname,
-      setErrors,
-      allFilled,
-      "nameError",
-      "Please enter your full name"
-    );
-    checkFilds(
-      email,
-      setErrors,
-      allFilled,
-      "signEmailError",
-      "Please enter your email address"
-    );
-    checkFilds(
-      password,
-      setErrors,
-      allFilled,
-      "signPasswordError",
-      "Please enter your password"
-    );
-    checkFilds(
-      confirmPassword,
-      setErrors,
-      allFilled,
-      "cormfirmPasswordError",
-      "Please confirm your password"
-    );
-    checkFilds(
-      contact,
-      setErrors,
-      allFilled,
-      "contactError",
-      "Please enter your contact number"
-    );
-    checkFilds(
-      identification,
-      setErrors,
-      allFilled,
-      "identificationError",
-      "Please enter your identification number"
-    );
-    checkFilds(age, setErrors, allFilled, "ageError", "Please enter your age");
-    checkFilds(sex, setErrors, allFilled, "sexError", "Please select your sex");
-    checkFilds(
-      nationality,
-      setErrors,
-      allFilled,
-      "nationalityError",
-      "Please enter your nationality"
-    );
-    checkFilds(
-      employeeID,
-      setErrors,
-      allFilled,
-      "employeeIDError",
-      "Please enter your employee ID"
-    );
-
-    return allFilled;
-  };
-
-  const createUserDataArrayAndStoreInLocalStorage = () => {
-    const {
-      fullname,
-      email,
-      contact,
-      identification,
-      age,
-      sex,
-      nationality,
-      employeeID,
-      password,
-    } = values;
-    if (!checkIfAllInputsFilled()) return;
-
-    let userData = [];
-    userData = JSON.parse(localStorage.getItem("userData")) || [];
-    userData.push({
-      fullname: fullname,
-      email: email,
-      contact: contact,
-      identification: identification,
-      age: age,
-      sex: sex,
-      nationality: nationality,
-      employeeID: employeeID,
-      password: password,
-    });
-    localStorage.setItem("userData", JSON.stringify(userData));
-    setValues({
-      fullname: "",
-      email: "",
-      contact: "",
-      identification: "",
-      age: "",
-      sex: "",
-      nationality: "",
-      employeeID: "",
-      password: "",
-      confirmPassword: "",
-    });
-  };
-
-  const comparePasswords = () => {
-    const { password, confirmPassword } = values;
-    if (password !== confirmPassword) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        cormfirmPasswordError: "Passwords do not match",
-      }));
-      return false;
-    } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        cormfirmPasswordError: "",
-      }));
-      return true;
-    }
-  };
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    if (!comparePasswords()) return;
-    createUserDataArrayAndStoreInLocalStorage();
+
+    if (!checkIfAllInputsFilled(values, setErrors)) return;
+    if (!comparePasswords(values, setErrors)) return;
+    if (!isAllValuesAdded(values)) return;
+    createUserDataArrayAndStoreInLocalStorage(values, setValues);
   };
   return (
     <div className="auth-container">

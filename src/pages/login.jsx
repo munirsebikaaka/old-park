@@ -2,6 +2,9 @@ import { useState } from "react";
 import "../uniqueStyles/auth.css";
 import { NavLink } from "react-router-dom";
 import { IoEye, IoEyeOffSharp } from "react-icons/io5";
+import { checkRequirement } from "../services/auth/authLogin/checkRequirements";
+import { checkUserData } from "../services/auth/authLogin/checkUserData";
+import { getLoggedInUserAndCheckRequirements } from "../services/auth/authLogin/getLoggedInUserData";
 
 const LoginForm = ({ setShowApp }) => {
   const [values, setValues] = useState({
@@ -16,62 +19,19 @@ const LoginForm = ({ setShowApp }) => {
     setValues({ ...values, [name]: value });
   };
 
-  const checkRequirement = (values) => {
-    const { email, password } = values;
-    if (!email) {
-      setEmailError("Please enter your email address");
-      return false;
-    } else {
-      setEmailError("");
-    }
-    if (!password) {
-      setPasswordError("Please enter your password");
-      return false;
-    } else {
-      setPasswordError("");
-    }
-    return true;
-  };
-
-  const checkUserData = () => {
-    let userData = JSON.parse(localStorage.getItem("userData"));
-    if (!userData) {
-      setEmailError("No user data found. Please sign up first.");
-      return false;
-    }
-    return true;
-  };
-
-  const getLoggedInUserAndCheckRequirements = () => {
-    let userData = JSON.parse(localStorage.getItem("userData"));
-    if (!userData) {
-      setEmailError("No user data found. Please sign up first.");
-      return false;
-    }
-    const user = userData.find((user) => user.email === values.email);
-    if (!user) {
-      setEmailError("Invalid email");
-      return false;
-    }
-    if (user.password !== values.password) {
-      setPasswordError("Wrong password!");
-      return false;
-    }
-    return true;
-  };
-
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    if (!checkRequirement(values)) return;
-    if (!checkUserData()) return;
-    if (!getLoggedInUserAndCheckRequirements()) return;
-
-    localStorage.setItem("managerCode", managerCode);
-    localStorage.setItem("logedInEmail", user.email);
-    localStorage.setItem("accountID", user.accountID);
-
+    if (!checkRequirement(values, setEmailError, setPasswordError)) return;
+    if (!checkUserData(setEmailError)) return;
+    if (
+      !getLoggedInUserAndCheckRequirements(
+        setEmailError,
+        setPasswordError,
+        values
+      )
+    )
+      return;
     setValues({ email: "", password: "" });
-
     setShowApp(true);
   };
 
@@ -83,17 +43,7 @@ const LoginForm = ({ setShowApp }) => {
         <form className="auth-form" onSubmit={onSubmitHandler}>
           <p className="login-email-error">{emailError}</p>
           <p className="login-password-error">{passwordError}</p>
-          {showPassword ? (
-            <IoEye
-              className="login-password-eye"
-              onClick={() => setShowPassword(!showPassword)}
-            />
-          ) : (
-            <IoEyeOffSharp
-              className="login-password-eye"
-              onClick={() => setShowPassword(!showPassword)}
-            />
-          )}
+
           <div className="form-group">
             <label htmlFor="loginEmail" className="form-label">
               Email Address
@@ -115,6 +65,17 @@ const LoginForm = ({ setShowApp }) => {
           </div>
 
           <div className="form-group">
+            {showPassword ? (
+              <IoEye
+                className="login-password-eye"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            ) : (
+              <IoEyeOffSharp
+                className="login-password-eye"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            )}
             <label htmlFor="loginPassword" className="form-label">
               Password
             </label>

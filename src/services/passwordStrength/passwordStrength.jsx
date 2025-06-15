@@ -18,3 +18,13 @@ export const isSymbolsAdded = (value) => {
   const isSymbols = symbols.some((el) => value.includes(el));
   return isSymbols;
 };
+
+export const isPasswordValid = (isPasswordLengthOk) => {
+  const isPasswordValid =
+    isLowerCaseAdded(values.password) &&
+    isUpperCaseAdded(values.password) &&
+    isNumsAdded(values.password) &&
+    isSymbolsAdded(values.password) &&
+    isPasswordLengthOk;
+  return isPasswordValid;
+};
