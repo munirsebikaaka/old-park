@@ -1,0 +1,117 @@
+:root {
+  --primary-color: #fff;
+  --secondary-color: #ecf0f1;
+  --accent-color: #e67e22;
+
+  --text-color: #2c3e50;
+  --medium-text: #7f8c8d;
+  --error-color: #991b1b;
+
+  --font-family: Outfit;
+
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-xxl: 4rem;
+
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+}
+
+.parking-container {
+  padding: var(--space-lg);
+  background-color: var(--secondary-color);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.parking-title {
+  text-align: center;
+  color: var(--text-color);
+  margin-bottom: var(--space-md);
+}
+
+.full-message {
+  text-align: center;
+  color: var(--error-color);
+  font-weight: bold;
+  margin-bottom: var(--space-md);
+}
+
+.parking-lot {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--space-sm);
+}
+
+.parking-slot {
+  background-color: var(--primary-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-sm);
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition-medium);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.parking-slot.free {
+  background-color: #a7e9a1; /* Green */
+}
+
+.parking-slot.occupied {
+  background-color: #f08383; /* Red */
+}
+
+.slot-label {
+  font-weight: bold;
+  margin-bottom: var(--space-xs);
+}
+
+.vehicle-info {
+  text-align: center;
+}
+
+.vehicle-info .plate {
+  font-size: 0.85rem;
+  color: var(--text-color);
+}
+
+.vehicle-info .type {
+  font-size: 0.75rem;
+  color: var(--medium-text);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .parking-lot {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+
+  .slot-label {
+    font-size: 0.85rem;
+  }
+
+  .vehicle-info .plate,
+  .vehicle-info .type {
+    font-size: 0.7rem;
+  }
+}

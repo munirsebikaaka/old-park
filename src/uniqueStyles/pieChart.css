@@ -1,0 +1,16 @@
+.chart-container {
+  background-color: var(--secondary-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-md);
+  max-width: 600px;
+  margin: auto;
+}
+
+.chart-title {
+  color: var(--text-color);
+  font-family: var(--font-family);
+  font-size: 1.5rem;
+  margin-bottom: var(--space-md);
+  text-align: center;
+}

@@ -2,7 +2,11 @@ import { useState } from "react";
 import "../uniqueStyles/parkingForms.css";
 
 const VehicleEntryForm = () => {
-  const [values, setValues] = useState({ license: "", vehicleType: "" });
+  const [values, setValues] = useState({
+    license: "",
+    vehicleType: "",
+    slot: "",
+  });
   const [vehicleTypeErorr, setVehicleTypeError] = useState("");
   const [licenseErorr, setLicenseError] = useState("");
   const handleChange = (e) => {
@@ -12,7 +16,7 @@ const VehicleEntryForm = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    const { license, vehicleType } = values;
+    const { license, vehicleType, slot } = values;
     if (!license)
       return setLicenseError("Please enter your license plate number");
     setLicenseError("");
@@ -24,13 +28,14 @@ const VehicleEntryForm = () => {
     let parkingData = [];
     parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
     const data = {
+      slot: Number(slot) - 1,
       license: license,
       vehicleType: vehicleType,
       startTime: new Date(),
     };
     parkingData.push(data);
     localStorage.setItem("parkingData", JSON.stringify(parkingData));
-    setValues({ license: "", vehicleType: "" });
+    setValues({ license: "", vehicleType: "", slot: "" });
   };
   return (
     <div className="form-container">
@@ -55,6 +60,20 @@ const VehicleEntryForm = () => {
                 ? { border: "1px solid  #991b1b" }
                 : { border: "1px solid #d1d5db" }
             }
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="slot" className="form-label">
+            Slot{" "}
+          </label>
+          <input
+            type="number"
+            name="slot"
+            onChange={handleChange}
+            value={values.slot}
+            id="slot"
+            className="form-input"
+            placeholder=" slot"
           />
         </div>
 

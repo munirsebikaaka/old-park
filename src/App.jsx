@@ -10,9 +10,11 @@ import SignupForm from "./pages/signup";
 import UserAccount from "./pages/userAccount";
 import Applayout from "./pages/applayout";
 import { useEffect, useState } from "react";
+import ParkingLot from "./pages/parkingLot";
+import ParkingPieChart from "./pages/pieChart";
 
 function App() {
-  const [showApp, setShowApp] = useState(false);
+  const [showApp, setShowApp] = useState(true);
   useEffect(() => {
     if (showApp) {
       localStorage.setItem("showApp", true);
@@ -26,6 +28,7 @@ function App() {
   }, []);
   return (
     <>
+      <ParkingPieChart />
       <BrowserRouter>
         <Routes>
           <Route
