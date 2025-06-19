@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
-// import "./ParkingPieChart.css"; // Import custom styles
-import "../uniqueStyles/pieChart.css";
+import "../../uniqueStyles/PieChart.css";
 
 // Register necessary parts of Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -59,7 +58,7 @@ const ParkingPieChart = () => {
     responsive: true, // Makes chart adjust to screen size
     plugins: {
       legend: {
-        position: "bottom",
+        position: "top",
         labels: {
           color: "var(--text-color)",
           font: {

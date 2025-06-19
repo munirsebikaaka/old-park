@@ -1,201 +1,419 @@
-import React, { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useState } from "react";
+import "../uniqueStyles/auth.css";
+import { IoCloseSharp, IoEye, IoEyeOffSharp } from "react-icons/io5";
+import { IoMdCheckmark } from "react-icons/io";
 import {
-  isLowerCaseAdded,
-  isNumsAdded,
-  isSymbolsAdded,
-  isUpperCaseAdded,
-} from "../services/passwordStrength/passwordStrength";
-import { NavLink } from "react-router-dom";
-import "../uniqueStyles/forms.css";
-import { toast, ToastContainer } from "react-toastify";
+  checkIfAllInputsFilled,
+  isAllValuesAdded,
+} from "../services/auth/authSignup/checkIfAllInputsFilled";
+import { createUserDataArrayAndStoreInLocalStorage } from "../services/auth/authSignup/createDataArray";
+import { comparePasswords } from "../services/auth/authSignup/comparePassword";
 
-const SignUp = () => {
+const SignupForm = () => {
   const [values, setValues] = useState({
     fullname: "",
     email: "",
+    contact: "",
+    identification: "",
+    age: "",
+    sex: "",
+    nationality: "",
+    employeeID: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [nameError, setNameError] = useState("");
-  const [signEmailError, setSignEmailError] = useState("");
-  const [signPasswordError, setSignPasswordError] = useState("");
-  const [cormfirmPasswordError, setComfirmPasswordError] = useState("");
+  const [errors, setErrors] = useState({
+    nameError: "",
+    signEmailError: "",
+    signPasswordError: "",
+    cormfirmPasswordError: "",
+    contactError: "",
+    identificationError: "",
+    ageError: "",
+    sexError: "",
+    nationalityError: "",
+    employeeIDError: "",
+  });
+
   const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordRepeat, setShowPasswordRepeat] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    const { fullname, email, password, confirmPassword } = values;
-    if (!fullname) return setNameError("Please enter your full name");
-    setNameError("");
 
-    if (!email) return setSignEmailError("Please enter your email address");
-    setSignEmailError("");
-
-    if (!password) return setSignPasswordError("Please enter your password");
-    setSignPasswordError("");
-
-    if (password.length < 6)
-      return setSignPasswordError(
-        "Password must be at least 6 characters long"
-      );
-    setSignPasswordError("");
-
-    if (!confirmPassword)
-      return setComfirmPasswordError("Please confirm your password");
-    setComfirmPasswordError("");
-
-    if (password !== confirmPassword)
-      return setComfirmPasswordError("Passwords do not match");
-    setComfirmPasswordError("");
-
-    let userData = [];
-    userData = JSON.parse(localStorage.getItem("userData")) || [];
-    userData.push({
-      fullname: fullname,
-      email: email,
-      password: password,
-      confirmPassword: confirmPassword,
-      accountID: `${email}${Math.random() * 10}${new Date().toISOString()}`,
-      managerCode: email.slice(0, 7) == "0742256" && email.slice(0, 7),
-    });
-    localStorage.setItem("userData", JSON.stringify(userData));
-    setValues({
-      fullname: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
-    toast.success("Account created successfully!");
+    if (!checkIfAllInputsFilled(values, setErrors)) return;
+    if (!comparePasswords(values, setErrors)) return;
+    if (!isAllValuesAdded(values)) return;
+    createUserDataArrayAndStoreInLocalStorage(values, setValues);
   };
   return (
-    <div className="signup-container">
-      <ToastContainer
-        position="top-right"
-        style={{ fontSize: "16px", fontFamily: "Outfit" }}
-      />
-      <div className="signup-card">
-        <p className="nameError">{nameError}</p>
-        <p className="signEmailError">{signEmailError}</p>
-        <p className="signPasswordError">{signPasswordError}</p>
-        {!showPassword ? (
-          <FaEye className="signupEye" onClick={() => setShowPassword(true)} />
-        ) : (
-          <FaEyeSlash
-            className="signupEyeHide"
-            onClick={() => setShowPassword(false)}
-          />
-        )}
-        {!showPasswordRepeat ? (
-          <FaEye
-            className="signupEyeRepeat"
-            onClick={() => setShowPasswordRepeat(true)}
-          />
-        ) : (
-          <FaEyeSlash
-            className="signupEyeHideRepeat"
-            onClick={() => setShowPasswordRepeat(false)}
-          />
-        )}
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">Create New Account</h2>
 
-        <p className="cormfirmPasswordError">{cormfirmPasswordError}</p>
-        <div className="signup-header">
-          <h1>Create Account</h1>
-          <p>
-            Join our parking community and enjoy unlimitted parking experiences.
-          </p>
-        </div>
+        <form className="auth-form" onSubmit={onSubmitHandler}>
+          {/* {showPassword ? (
+            <IoEye
+              className="signup-password-eye"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          ) : (
+            <IoEyeOffSharp
+              className="signup-password-eye"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          )}
 
-        <form className="signup-form" onSubmit={onSubmitHandler}>
+          {showConfirmPassword ? (
+            <IoEye
+              className="signup-confirm-password-eye"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
+          ) : (
+            <IoEyeOffSharp
+              className="signup-confirm-password-eye"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
+          )} */}
+
           <div className="form-group">
-            <label htmlFor="fullname">Full Name</label>
+            <p className="namesErr">{errors.nameError}</p>
+
+            <label htmlFor="signupName" className="form-label">
+              Full Name
+            </label>
             <input
               type="text"
               name="fullname"
               value={values.fullname}
               onChange={handleChange}
-              placeholder="Enter your full name"
+              id="signupName"
               className="form-input"
+              placeholder="munir ahmed"
               style={
-                nameError.length > 0
+                errors.nameError.length > 0
                   ? { border: "1px solid  #991b1b" }
-                  : { border: "1px solid  #d1d5db" }
+                  : { border: "1px solid #d1d5db" }
               }
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <p className="emailErr">{errors.signEmailError}</p>
+
+            <label htmlFor="signupEmail" className="form-label">
+              Email Address
+            </label>
             <input
               type="email"
               name="email"
               value={values.email}
               onChange={handleChange}
-              placeholder="Enter your email"
+              id="signupEmail"
               className="form-input"
+              placeholder="munir@example.com"
               style={
-                signEmailError.length > 0
+                errors.signEmailError.length > 0
                   ? { border: "1px solid  #991b1b" }
-                  : { border: "1px solid  #d1d5db" }
+                  : { border: "1px solid #d1d5db" }
               }
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <p className="contactErr">{errors.contactError}</p>
+            <label htmlFor="signupContact" className="form-label">
+              Contact Number
+            </label>
             <input
-              type={showPassword ? "text" : "password"}
+              type="text"
+              name="contact"
+              value={values.contact}
+              onChange={handleChange}
+              id="signupContact"
+              className="form-input"
+              placeholder="123-456-7890"
+              style={
+                errors.contactError.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
+            />
+          </div>
+
+          <div className="form-group">
+            <p className="identificationErr">{errors.identificationError}</p>
+            <label htmlFor="signupIdentification" className="form-label">
+              Identification Number
+            </label>
+            <input
+              type="text"
+              name="identification"
+              value={values.identification}
+              onChange={handleChange}
+              id="signupIdentification"
+              className="form-input"
+              placeholder="123456789"
+              style={
+                errors.identificationError.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
+            />
+          </div>
+          <div className="form-group">
+            <p className="ageErr">{errors.ageError}</p>
+            <label htmlFor="signupAge" className="form-label">
+              Age
+            </label>
+            <input
+              type="number"
+              name="age"
+              value={values.age}
+              onChange={handleChange}
+              id="signupAge"
+              className="form-input"
+              placeholder="18"
+              style={
+                errors.ageError.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
+            />
+          </div>
+
+          <div className="form-group">
+            <p className="sexErr">{errors.sexError}</p>
+            <label htmlFor="signupSex" className="form-label">
+              Sex
+            </label>
+            <select
+              name="sex"
+              value={values.sex}
+              onChange={handleChange}
+              id="signupSex"
+              className="form-input"
+              style={
+                errors.sexError.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
+            >
+              <option value="">Select your sex</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <p className="nationalityErr">{errors.nationalityError}</p>
+            <label htmlFor="signupNationality" className="form-label">
+              Nationality
+            </label>
+            <input
+              type="text"
+              name="nationality"
+              value={values.nationality}
+              onChange={handleChange}
+              id="signupNationality"
+              className="form-input"
+              placeholder="Your nationality"
+              style={
+                errors.nationalityError.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
+            />
+          </div>
+          <div className="form-group">
+            <p className="employeeIDErr">{errors.employeeIDError}</p>
+            <label htmlFor="signupEmployeeID" className="form-label">
+              Employee ID
+            </label>
+            <input
+              type="text"
+              name="employeeID"
+              value={values.employeeID}
+              onChange={handleChange}
+              id="signupEmployeeID"
+              className="form-input"
+              placeholder="Your Employee ID"
+              style={
+                errors.employeeIDError.length > 0
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
+              }
+            />
+          </div>
+
+          <div className="form-group">
+            <p className="passwordErr">{errors.signPasswordError}</p>
+            <label htmlFor="signupPassword" className="form-label">
+              Password
+            </label>
+            <input
+              type={!showPassword ? "password" : "text"}
               name="password"
               value={values.password}
               onChange={handleChange}
-              placeholder="Create a password"
+              id="signupPassword"
               className="form-input"
+              placeholder="••••••••"
               style={
-                signPasswordError.length > 0
+                errors.signPasswordError.length > 0
                   ? { border: "1px solid  #991b1b" }
-                  : { border: "1px solid  #d1d5db" }
+                  : { border: "1px solid #d1d5db" }
               }
             />
           </div>
 
+          {/* <div className={"passwordCheck"}>
+            <div>
+              <p className={"check"}>
+                {isUpperCaseAdded(values.password) ? (
+                  <IoMdCheckmark
+                    style={{
+                      color: "#00ff00",
+                    }}
+                  />
+                ) : (
+                  <IoCloseSharp
+                    style={{
+                      color: "#fc4747",
+                    }}
+                  />
+                )}
+                one capital letter
+              </p>
+              <p className={"check"}>
+                {isLowerCaseAdded(values.password) ? (
+                  <IoMdCheckmark
+                    style={{
+                      color: "#00ff00",
+                    }}
+                  />
+                ) : (
+                  <IoCloseSharp
+                    style={{
+                      color: "#fc4747",
+                    }}
+                  />
+                )}
+                one small letter
+              </p>
+              <p className={"check"}>
+                {isLowerCaseAdded(values.password) &&
+                isUpperCaseAdded(values.password) ? (
+                  <IoMdCheckmark
+                    style={{
+                      color: "#00ff00",
+                    }}
+                  />
+                ) : (
+                  <IoCloseSharp
+                    style={{
+                      color: "#fc4747",
+                    }}
+                  />
+                )}
+                only Latin letters
+              </p>
+            </div>
+            <div>
+              <p className={"check"}>
+                {isNumsAdded(values.password) ? (
+                  <IoMdCheckmark
+                    style={{
+                      color: "#00ff00",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                    }}
+                  />
+                ) : (
+                  <IoCloseSharp
+                    style={{
+                      color: "#fc4747",
+                    }}
+                  />
+                )}{" "}
+                one digit
+              </p>
+              <p className={"check"}>
+                {isSymbolsAdded(values.password) ? (
+                  <IoMdCheckmark
+                    style={{
+                      color: "#00ff00",
+                    }}
+                  />
+                ) : (
+                  <IoCloseSharp
+                    style={{
+                      color: "#fc4747",
+                    }}
+                  />
+                )}
+                one symbol
+              </p>
+              <p className={"check"}>
+                {isPasswordLengthOk ? (
+                  <IoMdCheckmark
+                    style={{
+                      color: "#00ff00",
+                    }}
+                  />
+                ) : (
+                  <IoCloseSharp
+                    style={{
+                      color: "#fc4747",
+                    }}
+                  />
+                )}
+                use 6 or more
+              </p>
+            </div>
+          </div> */}
+
           <div className="form-group">
-            <label htmlFor="confirm-password">Confirm Password</label>
+            <p className="confirmPasswordErr">{errors.cormfirmPasswordError}</p>
+            <label htmlFor="signupConfirmPassword" className="form-label">
+              Confirm Password
+            </label>
             <input
-              type={showPasswordRepeat ? "text" : "password"}
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={values.confirmPassword}
               onChange={handleChange}
-              placeholder="Confirm your password"
+              id="signupConfirmPassword"
               className="form-input"
+              placeholder="••••••••"
               style={
-                cormfirmPasswordError.length > 0
+                errors.cormfirmPasswordError.length > 0
                   ? { border: "1px solid  #991b1b" }
-                  : { border: "1px solid  #d1d5db" }
+                  : { border: "1px solid #d1d5db" }
               }
             />
           </div>
 
-          <button type="submit" className="signup-button">
-            Sign Up
+          <button type="submit" className="auth-button primary">
+            Create Account
           </button>
-        </form>
-        <div className="login-link">
-          <p className="switch">
+
+          <div className="auth-footer">
             Already have an account?
-            <NavLink to="/" className="login-link">
+            <a href="#" className="auth-link">
               Login
-            </NavLink>
-          </p>
-        </div>
+            </a>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default SignUp;
+export default SignupForm;

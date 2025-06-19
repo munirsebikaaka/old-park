@@ -1,0 +1,35 @@
+.manager-page {
+  font-family: var(--font-family);
+  background-color: var(--secondary-color);
+  padding: var(--space-lg);
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+.manager-page h1 {
+  font-size: 2rem;
+  margin-bottom: var(--space-md);
+  color: var(--text-color);
+}
+
+.manager-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  background-color: var(--primary-color);
+  padding: var(--space-md);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-medium);
+}
+
+.manager-body > * {
+  flex: 1 1 300px;
+  min-width: 300px;
+}
+
+@media (max-width: 768px) {
+  .manager-body {
+    flex-direction: column;
+  }
+}

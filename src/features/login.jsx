@@ -1,7 +1,12 @@
-import React, { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useState } from "react";
+import "../uniqueStyles/auth.css";
 import { NavLink } from "react-router-dom";
-const Login = ({ setShowApp }) => {
+import { IoEye, IoEyeOffSharp } from "react-icons/io5";
+import { checkRequirement } from "../services/auth/authLogin/checkRequirements";
+import { checkUserData } from "../services/auth/authLogin/checkUserData";
+import { getLoggedInUserAndCheckRequirements } from "../services/auth/authLogin/getLoggedInUserData";
+
+const LoginForm = ({ setShowApp }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -13,100 +18,97 @@ const Login = ({ setShowApp }) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    const { email, password } = values;
-    if (!email) return setEmailError("Please enter your email address");
-    setEmailError("");
-    // if (!password) return setPasswordError("Please enter your password");
-    // setPasswordError("");
-    let userData = JSON.parse(localStorage.getItem("userData"));
-    if (!userData) return alert("No user data found. Please sign up first.");
-    const user = userData.find((user) => user.email === email);
-
-    if (!user) return setEmailError("Invalid email");
-    const { password: userPassword, managerCode } = user;
-
-    localStorage.setItem("managerCode", managerCode);
-    localStorage.setItem("logedInEmail", user.email);
-    setEmailError("");
-    // if (userPassword !== password) return setPasswordError("Wrong password!");
-    // setPasswordError("");
-    // setValues({ email: "", password: "" });
-
+    if (!checkRequirement(values, setEmailError, setPasswordError)) return;
+    if (!checkUserData(setEmailError)) return;
+    if (
+      !getLoggedInUserAndCheckRequirements(
+        setEmailError,
+        setPasswordError,
+        values
+      )
+    )
+      return;
+    setValues({ email: "", password: "" });
     setShowApp(true);
   };
-  return (
-    <div className="login-container">
-      <div className="login-card">
-        <p className="loginEmailError">{emailError}</p>
-        <p className="loginPasswordError">{passwordError}</p>
-        {!showPassword ? (
-          <FaEye
-            className="signupEyeLogin"
-            onClick={() => setShowPassword(true)}
-          />
-        ) : (
-          <FaEyeSlash
-            className="signupEyeHideLogin"
-            onClick={() => setShowPassword(false)}
-          />
-        )}
-        <div className="welcome-section">
-          <h1>Welcome Back!</h1>
-          <p>Park with ease and convenience. Login to manage your parking.</p>
-        </div>
 
-        <form className="login-form" onSubmit={onSubmitHandler}>
+  return (
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">Login to Your Account</h2>
+
+        <form className="auth-form" onSubmit={onSubmitHandler}>
+          <p className="login-email-error">{emailError}</p>
+          <p className="login-password-error">{passwordError}</p>
+
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="loginEmail" className="form-label">
+              Email Address
+            </label>
             <input
               type="email"
               name="email"
-              value={values.email}
               onChange={handleChange}
-              placeholder="Enter your email"
+              value={values.email}
+              id="loginEmail"
               className="form-input"
+              placeholder="munir@example.com"
               style={
                 emailError.length > 0
                   ? { border: "1px solid  #991b1b" }
-                  : { border: "1px solid  #d1d5db" }
+                  : { border: "1px solid #d1d5db" }
               }
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            {showPassword ? (
+              <IoEye
+                className="login-password-eye"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            ) : (
+              <IoEyeOffSharp
+                className="login-password-eye"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            )}
+            <label htmlFor="loginPassword" className="form-label">
+              Password
+            </label>
             <input
               type={!showPassword ? "password" : "text"}
               name="password"
-              value={values.password}
               onChange={handleChange}
-              placeholder="Enter your password"
+              value={values.password}
+              id="loginPassword"
               className="form-input"
+              placeholder="••••••••"
               style={
                 passwordError.length > 0
-                  ? { border: "1px solid  #1a1616" }
-                  : { border: "1px solid  #d1d5db" }
+                  ? { border: "1px solid  #991b1b" }
+                  : { border: "1px solid #d1d5db" }
               }
             />
           </div>
 
-          <button type="submit" className="login-button">
+          <button type="submit" className="auth-button primary">
             Login
           </button>
-        </form>
-        <div className="signup-link">
-          <p className="switch">
+
+          <div className="auth-footer">
             Don't have an account?
-            <NavLink to="/signup" className="signup-link">
+            <NavLink to="/signup" className="auth-link">
               Sign up
             </NavLink>
-          </p>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default LoginForm;

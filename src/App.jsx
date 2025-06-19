@@ -4,14 +4,13 @@ import VehicleExitForm from "./pages/exit";
 import Garage from "./pages/garage";
 
 import ParkingHomepage from "./pages/home";
-import LoginForm from "./pages/login";
+import LoginForm from "./features/login";
 import VehicleEntryForm from "./pages/park";
-import SignupForm from "./pages/signup";
+import SignupForm from "./features/signup";
 import UserAccount from "./pages/userAccount";
-import Applayout from "./pages/applayout";
 import { useEffect, useState } from "react";
-import ParkingLot from "./pages/parkingLot";
-import ParkingPieChart from "./pages/pieChart";
+import Applayout from "./components/applayout/applayout";
+import ManagerPage from "./pages/managerPage";
 
 function App() {
   const [showApp, setShowApp] = useState(true);
@@ -28,7 +27,6 @@ function App() {
   }, []);
   return (
     <>
-      <ParkingPieChart />
       <BrowserRouter>
         <Routes>
           <Route
@@ -44,11 +42,10 @@ function App() {
             <Route index element={<Navigate replace to={"home"} />} />
             <Route path="home" element={<ParkingHomepage />} />
             <Route path="entry" element={<VehicleEntryForm />} />
-
             <Route path="exit" element={<VehicleExitForm />} />
-
             <Route path="garage" element={<Garage />} />
             <Route path="account" element={<UserAccount />} />
+            <Route path="manager" element={<ManagerPage />} />
           </Route>
           <Route
             path="signup"

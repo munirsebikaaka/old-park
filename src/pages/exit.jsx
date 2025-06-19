@@ -9,29 +9,24 @@ const VehicleExitForm = () => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
-  const startTime = () => {
-    const startTime = parkingData.find(
-      (el) => el.license === values.license
-    )?.startTime;
-    return startTime;
-  };
+  const startTime = () =>
+    parkingData.find((el) => el.license === values.license)?.startTime;
 
-  const calculateMinutesPassed = () => {
-    if (!startTime()) return "nothing";
-    const currentTime = new Date();
-    const differenceInMilliseconds = currentTime - new Date(startTime());
-    const minutesPassed = differenceInMilliseconds / (1000 * 60);
-    return Math.floor(minutesPassed);
-  };
-  const dayTime = () => {
-    const startTime = new Date();
-    const startHour = startTime.getHours();
-    return startHour >= 6 && startHour < 18;
-  };
-  const nightTime = () => {
-    const startTime = new Date();
-    const startHour = startTime.getHours();
-    return startHour >= 18 || startHour < 6;
+  const keepLeftVehiclesData = (values) => {
+    const leftParkingData =
+      JSON.parse(localStorage.getItem("leftParkingData")) || [];
+    const leftCar = parkingData.find(
+      (vehicle) => vehicle.license === values.license
+    );
+    if (leftCar) {
+      leftParkingData.push({ ...leftCar, leftTime: new Date() });
+    }
+    localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
+
+    const updatedParkingData = parkingData.filter(
+      (vehicle) => vehicle.license !== values.license
+    );
+    localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
   };
 
   const countMoneyPaid = (
@@ -42,228 +37,94 @@ const VehicleExitForm = () => {
     realDayPayment,
     realNightPayment
   ) => {
-    let isDayTime;
-    let isNightTime;
-    let parkingCoast = 0;
+    if (data.vehicleType !== vehicle) return;
 
-    const startParkingTime = new Date(startTime()).getHours();
-    let minutesPassed = calculateMinutesPassed();
+    const startDate = new Date(startTime());
+    const currentDate = new Date();
+    const differenceInMilliseconds = currentDate - startDate;
+    const hoursPassed = differenceInMilliseconds / (1000 * 60 * 60);
 
-    if (dayTime()) isDayTime = true;
-    if (nightTime()) isNightTime = true;
-    if (
-      isDayTime &&
-      startParkingTime >= 6 &&
-      startParkingTime < 18 &&
-      data.vehicleType === vehicle
-    ) {
-      parkingCoast = (minutesPassed / 60) * realDayPayment;
-      console.log(
-        `u hv spent ${(minutesPassed / 60).toFixed(
-          2
-        )} hours, u gona pay ${parkingCoast.toFixed(2)}`
-      );
+    const startHour = startDate.getHours();
+    let parkingCost = 0;
 
-      let leftParkingData = [];
-      leftParkingData =
-        JSON.parse(localStorage.getItem("leftParkingData")) || [];
-      const leftCar = parkingData.find(
-        (vehicle) => vehicle.license === values.license
-      );
-      leftParkingData.push(leftCar);
-      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
+    if (startHour >= 6 && startHour < 18) {
+      const timeBeforeNight = 18 - startHour;
+      if (hoursPassed > timeBeforeNight) {
+        const dayHours = timeBeforeNight;
+        const nightHours = hoursPassed - dayHours;
 
-      const updatedParkingData = parkingData.filter(
-        (vehicle) => vehicle.license !== values.license
-      );
-      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
-    } else if (
-      isDayTime &&
-      startParkingTime >= 18 &&
-      data.vehicleType === vehicle
-    ) {
-      const timeBeforeDayTime = 18 - startParkingTime;
-      const timeBeforeDayTimeMinutes = timeBeforeDayTime * 60;
-      const extraMinutes = minutesPassed - timeBeforeDayTimeMinutes;
+        const dayCost = dayHours * realDayPayment;
+        const nightCost = nightHours * nightExtraPay;
 
-      if (extraMinutes > 0) {
-        const extraParkingCost = extraMinutes * dayExtraPay;
-        const parkingShiftTimeCost =
-          timeBeforeDayTimeMinutes * realNightPayment;
-        parkingCoast = extraParkingCost + parkingShiftTimeCost;
+        parkingCost = dayCost + nightCost;
       } else {
-        parkingCoast = minutesPassed * realNightPayment;
+        parkingCost = hoursPassed * realDayPayment;
+      }
+    } else {
+      let timeBeforeDay;
+      if (startHour >= 18) {
+        timeBeforeDay = 24 - startHour + 6;
+      } else {
+        timeBeforeDay = 6 - startHour;
       }
 
-      console.log(
-        `u hv spent ${(minutesPassed / 60).toFixed(
-          2
-        )} hours, u gona pay ${parkingCoast.toFixed(2)}`
-      );
+      if (hoursPassed > timeBeforeDay) {
+        const nightHours = timeBeforeDay;
+        const dayHours = hoursPassed - nightHours;
 
-      let leftParkingData = [];
-      leftParkingData =
-        JSON.parse(localStorage.getItem("leftParkingData")) || [];
-      const leftCar = parkingData.find(
-        (vehicle) => vehicle.license === values.license
-      );
-      leftParkingData.push(leftCar);
-      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
+        const nightCost = nightHours * realNightPayment;
+        const dayCost = dayHours * dayExtraPay;
 
-      const updatedParkingData = parkingData.filter(
-        (vehicle) => vehicle.license !== values.license
-      );
-      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
-    } else if (
-      isDayTime &&
-      startParkingTime < 6 &&
-      data.vehicleType === vehicle
-    ) {
-      const timeBeforeDayTime = 6 - startParkingTime;
-      const timeBeforeDayTimeMinutes = timeBeforeDayTime * 60;
-      const extraMinutes = minutesPassed - timeBeforeDayTimeMinutes;
-
-      if (extraMinutes > 0) {
-        const extraParkingCost = extraMinutes * dayExtraPay;
-        const parkingShiftTimeCost =
-          timeBeforeDayTimeMinutes * realNightPayment;
-        parkingCoast = extraParkingCost + parkingShiftTimeCost;
+        parkingCost = nightCost + dayCost;
       } else {
-        parkingCoast = minutesPassed * realNightPayment;
+        parkingCost = hoursPassed * realNightPayment;
       }
-
-      console.log(
-        `u hv spent ${(minutesPassed / 60).toFixed(
-          2
-        )} hours, u gona pay ${parkingCoast.toFixed(2)}`
-      );
-
-      let leftParkingData = [];
-      leftParkingData =
-        JSON.parse(localStorage.getItem("leftParkingData")) || [];
-      const leftCar = parkingData.find(
-        (vehicle) => vehicle.license === values.license
-      );
-      leftParkingData.push(leftCar);
-      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
-
-      const updatedParkingData = parkingData.filter(
-        (vehicle) => vehicle.license !== values.license
-      );
-      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
-    } else if (
-      isNightTime &&
-      startParkingTime >= 18 &&
-      data.vehicleType === vehicle
-    ) {
-      parkingCoast = minutesPassed * realNightPayment;
-      console.log(
-        `u hv spent ${(minutesPassed / 60).toFixed(
-          2
-        )} hours, u gona pay ${parkingCoast.toFixed(2)}`
-      );
-
-      let leftParkingData = [];
-      leftParkingData =
-        JSON.parse(localStorage.getItem("leftParkingData")) || [];
-      const leftCar = parkingData.find(
-        (vehicle) => vehicle.license === values.license
-      );
-      leftParkingData.push(leftCar);
-      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
-
-      const updatedParkingData = parkingData.filter(
-        (vehicle) => vehicle.license !== values.license
-      );
-      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
-    } else if (
-      isNightTime &&
-      startParkingTime < 6 &&
-      data.vehicleType === vehicle
-    ) {
-      parkingCoast = minutesPassed * realNightPayment;
-      console.log(
-        `u hv spent ${(minutesPassed / 60).toFixed(
-          2
-        )} hours, u gona pay ${parkingCoast.toFixed(2)}`
-      );
-
-      let leftParkingData = [];
-      leftParkingData =
-        JSON.parse(localStorage.getItem("leftParkingData")) || [];
-      const leftCar = parkingData.find(
-        (vehicle) => vehicle.license === values.license
-      );
-      leftParkingData.push(leftCar);
-      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
-
-      const updatedParkingData = parkingData.filter(
-        (vehicle) => vehicle.license !== values.license
-      );
-      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
-    } else if (
-      isNightTime &&
-      startParkingTime >= 6 &&
-      startParkingTime < 18 &&
-      data.vehicleType === vehicle
-    ) {
-      const timeBeforeNightTime = 18 - startParkingTime;
-      const timeBeforeNightTimeMinutes = Math.abs(timeBeforeNightTime * 60);
-      const extraMinutes = minutesPassed - timeBeforeNightTimeMinutes;
-      if (extraMinutes > 0) {
-        const extraParkingCost = extraMinutes * nightExtraPay;
-        const parkingShiftTimeCost =
-          timeBeforeNightTimeMinutes * realDayPayment;
-        parkingCoast = extraParkingCost + parkingShiftTimeCost;
-      } else {
-        parkingCoast = minutesPassed * realDayPayment;
-      }
-
-      console.log(
-        `u hv spent ${(minutesPassed / 60).toFixed(
-          2
-        )} hours, u gona pay ${parkingCoast.toFixed(2)}`
-      );
-
-      let leftParkingData = [];
-      leftParkingData =
-        JSON.parse(localStorage.getItem("leftParkingData")) || [];
-      const leftCar = parkingData.find(
-        (vehicle) => vehicle.license === values.license
-      );
-      leftParkingData.push(leftCar);
-      localStorage.setItem("leftParkingData", JSON.stringify(leftParkingData));
-
-      const updatedParkingData = parkingData.filter(
-        (vehicle) => vehicle.license !== values.license
-      );
-      localStorage.setItem("parkingData", JSON.stringify(updatedParkingData));
     }
+
+    alert(
+      `You parked for ${hoursPassed.toFixed(
+        2
+      )} hours and you gona pay $${parkingCost.toFixed(2)} ${data.vehicleType}`
+    );
+
+    keepLeftVehiclesData(values);
   };
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
     const { license } = values;
-    if (!license)
+    if (!license) {
       return setLicenseError("Please enter your license plate number");
-    const data = parkingData.find((el) => el.license === license);
-    if (data) {
-      countMoneyPaid(data, "truck", 2, 3, 3, 2);
-      countMoneyPaid(data, "car", 1, 2, 2, 1);
-      countMoneyPaid(data, "motorcycle", 0.5, 1, 1, 0.5);
-      setValues({ license: "" });
-      setLicenseError("");
-    } else {
-      setLicenseError("License plate not found");
     }
+    const data = parkingData.find((el) => el.license === license);
+    if (!data) {
+      return setLicenseError("License plate not found");
+    }
+
+    switch (data.vehicleType) {
+      case "truck":
+        countMoneyPaid(data, "truck", 2, 3, 3, 2);
+        break;
+      case "car":
+        countMoneyPaid(data, "car", 1, 2, 2, 1);
+        break;
+      case "motorcycle":
+        countMoneyPaid(data, "motorcycle", 0.5, 1, 1, 0.5);
+        break;
+      default:
+        alert("Unsupported vehicle type");
+    }
+
+    setValues({ license: "" });
+    setLicenseError("");
   };
 
   return (
     <div className="form-container">
       <h2 className="form-title">Vehicle Exit</h2>
       <form className="parking-form" onSubmit={onSubmitHandler}>
-        <p className="exit-license-error">{licenseError}</p>
         <div className="form-group">
+          <p className="exit-license-error">{licenseError}</p>
           <label htmlFor="exitPlateNumber" className="form-label">
             License Plate Number
           </label>
