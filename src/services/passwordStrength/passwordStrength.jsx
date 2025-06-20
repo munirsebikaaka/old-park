@@ -19,12 +19,14 @@ export const isSymbolsAdded = (value) => {
   return isSymbols;
 };
 
-export const isPasswordValid = (isPasswordLengthOk) => {
+export const isPasswordLengthOk = (value) => value.length >= 6;
+
+export const isPasswordValid = (values) => {
   const isPasswordValid =
     isLowerCaseAdded(values.password) &&
     isUpperCaseAdded(values.password) &&
     isNumsAdded(values.password) &&
     isSymbolsAdded(values.password) &&
-    isPasswordLengthOk;
+    isPasswordLengthOk(values.password);
   return isPasswordValid;
 };

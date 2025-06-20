@@ -1,0 +1,35 @@
+.app-header {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-family);
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.header-actions {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.header-clock {
+  font-size: 1rem;
+  color: var(--text-color-muted);
+}
+
+.clock {
+  font-family: monospace;
+  background-color: var(--bg-muted);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--border-radius-sm);
+  font-weight: bold;
+}

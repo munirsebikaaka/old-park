@@ -83,7 +83,7 @@ body {
   position: relative;
 }
 
-.exit-license-error,
+/* .exit-license-error,
 .error-park-lincense,
 .error-park-type {
   position: absolute;
@@ -100,11 +100,5 @@ body {
   top: 11%;
 }
 .error-park-type {
-  top: 52%;
-}
-
-.applayout {
-  display: grid;
-  grid-template-columns: 26rem 1fr;
-  grid-template-rows: auto 1fr;
-}
+  top: 52%; */
+/* } */

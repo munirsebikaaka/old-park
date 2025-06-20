@@ -1,15 +1,9 @@
 .manager-page {
   font-family: var(--font-family);
-  background-color: var(--secondary-color);
+  /* background-color: var(--secondary-color); */
   padding: var(--space-lg);
   color: var(--text-color);
   min-height: 100vh;
-}
-
-.manager-page h1 {
-  font-size: 2rem;
-  margin-bottom: var(--space-md);
-  color: var(--text-color);
 }
 
 .manager-body {

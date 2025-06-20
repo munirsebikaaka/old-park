@@ -186,5 +186,4 @@ const ParkingHomepage = () => {
     </div>
   );
 };
-
 export default ParkingHomepage;

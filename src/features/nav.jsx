@@ -1,50 +1,62 @@
 import "../uniqueStyles/nav.css";
 import { NavLink } from "react-router-dom";
 
-const Navigation = () => {
-  return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <div className="navbar-brand">
-          <NavLink to="/home" className="navbar-logo">
-            ParkEasy
-          </NavLink>
-        </div>
+import React, { useState } from "react";
 
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <NavLink to="/home" className="nav-link">
-              Home
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/entry" className="nav-link">
-              Entry
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/exit" className="nav-link">
-              Exit
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/garage" className="nav-link">
-              Garage
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/account" className="nav-link">
-              Account
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/manager" className="nav-link">
-              Manager
-            </NavLink>
-          </li>
-        </ul>
+import {
+  FaHome,
+  FaSignInAlt,
+  FaSignOutAlt,
+  FaWarehouse,
+  FaUserCircle,
+  FaUserCog,
+} from "react-icons/fa";
+
+const Navigation = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const navLinks = [
+    { to: "/home", label: "Home", icon: <FaHome /> },
+    { to: "/entry", label: "Entry", icon: <FaSignInAlt /> },
+    { to: "/exit", label: "Exit", icon: <FaSignOutAlt /> },
+    { to: "/garage", label: "Garage", icon: <FaWarehouse /> },
+    { to: "/account", label: "Account", icon: <FaUserCircle /> },
+    { to: "/manager", label: "Manager", icon: <FaUserCog /> },
+  ];
+
+  return (
+    <>
+      <div className="navbar-header">
+        <NavLink to="/home" className="navbar-logo">
+          ParkEasy
+        </NavLink>
+        <button className="hamburger" onClick={toggleMenu}>
+          <span className="bar" />
+          <span className="bar" />
+          <span className="bar" />
+        </button>
       </div>
-    </nav>
+
+      <nav className={`navbar ${isOpen ? "open" : ""}`}>
+        <ul className={`navbar-nav ${isOpen ? "show" : ""}`}>
+          {navLinks.map(({ to, label, icon }) => (
+            <li className="nav-item" key={to}>
+              <NavLink
+                to={to}
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="nav-icon">{icon}</span>
+                <span className="nav-label">{label}</span>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </>
   );
 };
 

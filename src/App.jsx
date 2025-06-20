@@ -13,7 +13,7 @@ import Applayout from "./components/applayout/applayout";
 import ManagerPage from "./pages/managerPage";
 
 function App() {
-  const [showApp, setShowApp] = useState(true);
+  const [showApp, setShowApp] = useState(false);
   useEffect(() => {
     if (showApp) {
       localStorage.setItem("showApp", true);

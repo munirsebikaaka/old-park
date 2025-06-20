@@ -8,6 +8,14 @@ import {
 } from "../services/auth/authSignup/checkIfAllInputsFilled";
 import { createUserDataArrayAndStoreInLocalStorage } from "../services/auth/authSignup/createDataArray";
 import { comparePasswords } from "../services/auth/authSignup/comparePassword";
+import {
+  isLowerCaseAdded,
+  isNumsAdded,
+  isPasswordLengthOk,
+  isPasswordValid,
+  isSymbolsAdded,
+  isUpperCaseAdded,
+} from "../services/passwordStrength/passwordStrength";
 
 const SignupForm = () => {
   const [values, setValues] = useState({
@@ -48,8 +56,9 @@ const SignupForm = () => {
     e.preventDefault();
 
     if (!checkIfAllInputsFilled(values, setErrors)) return;
+    // if (!isAllValuesAdded(values)) return;
+    // if (!isPasswordValid(values.password)) return;
     if (!comparePasswords(values, setErrors)) return;
-    if (!isAllValuesAdded(values)) return;
     createUserDataArrayAndStoreInLocalStorage(values, setValues);
   };
   return (
@@ -58,30 +67,6 @@ const SignupForm = () => {
         <h2 className="auth-title">Create New Account</h2>
 
         <form className="auth-form" onSubmit={onSubmitHandler}>
-          {/* {showPassword ? (
-            <IoEye
-              className="signup-password-eye"
-              onClick={() => setShowPassword(!showPassword)}
-            />
-          ) : (
-            <IoEyeOffSharp
-              className="signup-password-eye"
-              onClick={() => setShowPassword(!showPassword)}
-            />
-          )}
-
-          {showConfirmPassword ? (
-            <IoEye
-              className="signup-confirm-password-eye"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            />
-          ) : (
-            <IoEyeOffSharp
-              className="signup-confirm-password-eye"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            />
-          )} */}
-
           <div className="form-group">
             <p className="namesErr">{errors.nameError}</p>
 
@@ -98,7 +83,7 @@ const SignupForm = () => {
               placeholder="munir ahmed"
               style={
                 errors.nameError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
@@ -120,7 +105,7 @@ const SignupForm = () => {
               placeholder="munir@example.com"
               style={
                 errors.signEmailError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
@@ -141,7 +126,7 @@ const SignupForm = () => {
               placeholder="123-456-7890"
               style={
                 errors.contactError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
@@ -162,7 +147,7 @@ const SignupForm = () => {
               placeholder="123456789"
               style={
                 errors.identificationError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
@@ -182,7 +167,7 @@ const SignupForm = () => {
               placeholder="18"
               style={
                 errors.ageError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
@@ -201,7 +186,7 @@ const SignupForm = () => {
               className="form-input"
               style={
                 errors.sexError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             >
@@ -226,7 +211,7 @@ const SignupForm = () => {
               placeholder="Your nationality"
               style={
                 errors.nationalityError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
@@ -246,7 +231,7 @@ const SignupForm = () => {
               placeholder="Your Employee ID"
               style={
                 errors.employeeIDError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
@@ -254,6 +239,17 @@ const SignupForm = () => {
 
           <div className="form-group">
             <p className="passwordErr">{errors.signPasswordError}</p>
+            {showPassword ? (
+              <IoEye
+                className="signup-password-eye"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            ) : (
+              <IoEyeOffSharp
+                className="signup-password-eye"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            )}
             <label htmlFor="signupPassword" className="form-label">
               Password
             </label>
@@ -267,120 +263,70 @@ const SignupForm = () => {
               placeholder="••••••••"
               style={
                 errors.signPasswordError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
           </div>
 
-          {/* <div className={"passwordCheck"}>
-            <div>
-              <p className={"check"}>
-                {isUpperCaseAdded(values.password) ? (
-                  <IoMdCheckmark
-                    style={{
-                      color: "#00ff00",
-                    }}
-                  />
-                ) : (
-                  <IoCloseSharp
-                    style={{
-                      color: "#fc4747",
-                    }}
-                  />
-                )}
-                one capital letter
-              </p>
-              <p className={"check"}>
-                {isLowerCaseAdded(values.password) ? (
-                  <IoMdCheckmark
-                    style={{
-                      color: "#00ff00",
-                    }}
-                  />
-                ) : (
-                  <IoCloseSharp
-                    style={{
-                      color: "#fc4747",
-                    }}
-                  />
-                )}
-                one small letter
-              </p>
-              <p className={"check"}>
-                {isLowerCaseAdded(values.password) &&
-                isUpperCaseAdded(values.password) ? (
-                  <IoMdCheckmark
-                    style={{
-                      color: "#00ff00",
-                    }}
-                  />
-                ) : (
-                  <IoCloseSharp
-                    style={{
-                      color: "#fc4747",
-                    }}
-                  />
-                )}
-                only Latin letters
-              </p>
-            </div>
-            <div>
-              <p className={"check"}>
-                {isNumsAdded(values.password) ? (
-                  <IoMdCheckmark
-                    style={{
-                      color: "#00ff00",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                    }}
-                  />
-                ) : (
-                  <IoCloseSharp
-                    style={{
-                      color: "#fc4747",
-                    }}
-                  />
-                )}{" "}
-                one digit
-              </p>
-              <p className={"check"}>
-                {isSymbolsAdded(values.password) ? (
-                  <IoMdCheckmark
-                    style={{
-                      color: "#00ff00",
-                    }}
-                  />
-                ) : (
-                  <IoCloseSharp
-                    style={{
-                      color: "#fc4747",
-                    }}
-                  />
-                )}
-                one symbol
-              </p>
-              <p className={"check"}>
-                {isPasswordLengthOk ? (
-                  <IoMdCheckmark
-                    style={{
-                      color: "#00ff00",
-                    }}
-                  />
-                ) : (
-                  <IoCloseSharp
-                    style={{
-                      color: "#fc4747",
-                    }}
-                  />
-                )}
-                use 6 or more
-              </p>
-            </div>
-          </div> */}
+          <div className={"passwordCheck"}>
+            <p className="check">
+              {isLowerCaseAdded(values.password) ? (
+                <IoMdCheckmark />
+              ) : (
+                <IoCloseSharp />
+              )}
+              a-z
+            </p>
+            <p className="check">
+              {isUpperCaseAdded(values.password) ? (
+                <IoMdCheckmark />
+              ) : (
+                <IoCloseSharp />
+              )}
+              A-Z
+            </p>
+            <p className="check">
+              {isNumsAdded(values.password) ? (
+                <IoMdCheckmark />
+              ) : (
+                <IoCloseSharp />
+              )}
+              0-9
+            </p>
+            <p className="check">
+              {isSymbolsAdded(values.password) ? (
+                <IoMdCheckmark />
+              ) : (
+                <IoCloseSharp />
+              )}
+              !-&
+            </p>
+            <p className="check">
+              {isPasswordLengthOk(values.password) ? (
+                <IoMdCheckmark />
+              ) : (
+                <IoCloseSharp />
+              )}
+              strong{" "}
+            </p>
+          </div>
 
           <div className="form-group">
             <p className="confirmPasswordErr">{errors.cormfirmPasswordError}</p>
+
+            {showConfirmPassword ? (
+              <IoEye
+                className="signup-confirm-password-eye"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              />
+            ) : (
+              <IoEyeOffSharp
+                className="signup-confirm-password-eye"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              />
+            )}
+
             <label htmlFor="signupConfirmPassword" className="form-label">
               Confirm Password
             </label>
@@ -394,7 +340,7 @@ const SignupForm = () => {
               placeholder="••••••••"
               style={
                 errors.cormfirmPasswordError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />

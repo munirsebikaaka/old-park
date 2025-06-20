@@ -9,6 +9,7 @@ const VehicleEntryForm = () => {
   });
   const [vehicleTypeErorr, setVehicleTypeError] = useState("");
   const [licenseErorr, setLicenseError] = useState("");
+  const [slotError, setSlotError] = useState("");
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
@@ -20,6 +21,9 @@ const VehicleEntryForm = () => {
     if (!license)
       return setLicenseError("Please enter your license plate number");
     setLicenseError("");
+
+    if (!slot) return setSlotError("Please input slot number");
+    setSlotError("");
 
     if (!vehicleType)
       return setVehicleTypeError("Please select your vehicle type");
@@ -41,9 +45,8 @@ const VehicleEntryForm = () => {
     <div className="form-container">
       <h2 className="form-title">Vehicle Entry</h2>
       <form className="parking-form" onSubmit={onSubmitHandler}>
-        <p className="error-park-lincense">{licenseErorr}</p>
-        <p className="error-park-type">{vehicleTypeErorr}</p>
         <div className="form-group">
+          <p className="error-park-lincense">{licenseErorr}</p>
           <label htmlFor="plateNumber" className="form-label">
             License Plate Number
           </label>
@@ -57,14 +60,15 @@ const VehicleEntryForm = () => {
             placeholder=" ABC 1234"
             style={
               licenseErorr.length > 0
-                ? { border: "1px solid  #991b1b" }
+                ? { border: "1px solid  #dc2626" }
                 : { border: "1px solid #d1d5db" }
             }
           />
         </div>
         <div className="form-group">
+          <p className="slot-error">{slotError}</p>
           <label htmlFor="slot" className="form-label">
-            Slot{" "}
+            Slot
           </label>
           <input
             type="number"
@@ -73,11 +77,17 @@ const VehicleEntryForm = () => {
             value={values.slot}
             id="slot"
             className="form-input"
-            placeholder=" slot"
+            placeholder="slot"
+            style={
+              slotError.length > 0
+                ? { border: "1px solid  #dc2626" }
+                : { border: "1px solid #d1d5db" }
+            }
           />
         </div>
 
         <div className="form-group">
+          <p className="error-park-type">{vehicleTypeErorr}</p>
           <label htmlFor="vehicleType" className="form-label">
             Vehicle Type
           </label>
@@ -89,7 +99,7 @@ const VehicleEntryForm = () => {
             value={values.vehicleType}
             style={
               vehicleTypeErorr.length > 0
-                ? { border: "1px solid  #991b1b" }
+                ? { border: "1px solid  #dc2626" }
                 : { border: "1px solid #d1d5db" }
             }
           >

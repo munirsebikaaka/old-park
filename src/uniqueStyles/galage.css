@@ -1,62 +1,65 @@
 .garage-container {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 2rem;
-  font-family: var(--font-family);
+  background-color: var(--primary-color);
+  padding: var(--space-lg);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .garage-title {
-  color: var(--text-color);
-  text-align: center;
-  margin-bottom: 2rem;
   font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: var(--space-xl);
+  color: var(--text-color);
 }
 
+/* Stats Section */
 .garage-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .stat-card {
-  background-color: white;
-  padding: 1.5rem;
+  background-color: var(--secondary-color);
   border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
+  padding: var(--space-md);
   text-align: center;
+  box-shadow: var(--shadow-sm);
 }
 
 .stat-value {
   font-size: 2rem;
   font-weight: bold;
   color: var(--accent-color);
-  margin-bottom: 0.5rem;
 }
 
 .stat-label {
-  color: var(--medium-text);
+  margin-top: var(--space-xs);
   font-size: 1rem;
+  color: var(--medium-text);
+  font-weight: 500;
 }
 
+/* Vehicles Table */
 .vehicles-table-container {
   overflow-x: auto;
-  background-color: white;
   border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
-  padding: 1rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .vehicles-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px;
+  background-color: var(--primary-color);
 }
 
 .vehicles-table th,
 .vehicles-table td {
-  padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #eee;
+  padding: var(--space-sm);
+  border-bottom: 1px solid var(--secondary-color);
 }
 
 .vehicles-table th {
@@ -65,18 +68,26 @@
   font-weight: 600;
 }
 
-.vehicles-table tr:hover {
-  background-color: #f9f9f9;
+.vehicles-table td {
+  font-size: 0.95rem;
+  color: var(--text-color);
 }
 
+/* Responsive tweaks */
 @media (max-width: 768px) {
   .garage-container {
-    padding: 1rem;
+    padding: var(--space-md);
   }
 
-  .vehicles-table th,
-  .vehicles-table td {
-    padding: 0.8rem 0.5rem;
+  .garage-title {
+    font-size: 1.5rem;
+  }
+
+  .stat-card {
+    padding: var(--space-sm);
+  }
+
+  .vehicles-table {
     font-size: 0.9rem;
   }
 }

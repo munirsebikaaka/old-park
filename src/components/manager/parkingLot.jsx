@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../uniqueStyles/ParkingLot.css";
 import { IoCloseSharp } from "react-icons/io5";
-const TOTAL_SLOTS = 50;
+const TOTAL_SLOTS = 30;
 
 const ParkingLot = () => {
   const [parkingData, setParkingData] = useState([]);

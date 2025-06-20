@@ -41,10 +41,8 @@ const LoginForm = ({ setShowApp }) => {
         <h2 className="auth-title">Login to Your Account</h2>
 
         <form className="auth-form" onSubmit={onSubmitHandler}>
-          <p className="login-email-error">{emailError}</p>
-          <p className="login-password-error">{passwordError}</p>
-
           <div className="form-group">
+            <p className="login-email-error">{emailError}</p>
             <label htmlFor="loginEmail" className="form-label">
               Email Address
             </label>
@@ -58,13 +56,15 @@ const LoginForm = ({ setShowApp }) => {
               placeholder="munir@example.com"
               style={
                 emailError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
           </div>
 
           <div className="form-group">
+            <p className="login-password-error">{passwordError}</p>
+
             {showPassword ? (
               <IoEye
                 className="login-password-eye"
@@ -89,7 +89,7 @@ const LoginForm = ({ setShowApp }) => {
               placeholder="••••••••"
               style={
                 passwordError.length > 0
-                  ? { border: "1px solid  #991b1b" }
+                  ? { border: "1px solid  #dc2626" }
                   : { border: "1px solid #d1d5db" }
               }
             />
