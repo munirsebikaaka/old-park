@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../uniqueStyles/auth.css";
-import { NavLink } from "react-router-dom";
 import { IoEye, IoEyeOffSharp } from "react-icons/io5";
 import { checkRequirement } from "../services/auth/authLogin/checkRequirements";
 import { checkUserData } from "../services/auth/authLogin/checkUserData";
 import { getLoggedInUserAndCheckRequirements } from "../services/auth/authLogin/getLoggedInUserData";
 
-const LoginForm = ({ setShowApp }) => {
+const LoginForm = ({ setShowApp, setUser, setShowSignUp }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -18,6 +17,16 @@ const LoginForm = ({ setShowApp }) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData")) || [];
+    const logedInUser = userData?.find(
+      (user) => user.identification === "2561234567890"
+    );
+    if (logedInUser) {
+      setUser(logedInUser);
+    }
+  }, []);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -101,9 +110,13 @@ const LoginForm = ({ setShowApp }) => {
 
           <div className="auth-footer">
             Don't have an account?
-            <NavLink to="/signup" className="auth-link">
+            <a
+              href="#"
+              onClick={() => setShowSignUp(true)}
+              className="auth-link"
+            >
               Sign up
-            </NavLink>
+            </a>
           </div>
         </form>
       </div>

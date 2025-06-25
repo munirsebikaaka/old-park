@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../uniqueStyles/parkingForms.css";
 
-const VehicleEntryForm = () => {
+const VehicleEntryForm = ({ user }) => {
   const [values, setValues] = useState({
     license: "",
     vehicleType: "",
@@ -14,6 +14,10 @@ const VehicleEntryForm = () => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
+
+  const userId = user?.identification;
+  console.log("userId", userId);
+  console.log(user);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -35,6 +39,7 @@ const VehicleEntryForm = () => {
       slot: Number(slot) - 1,
       license: license,
       vehicleType: vehicleType,
+      identification: userId,
       startTime: new Date(),
     };
     parkingData.push(data);

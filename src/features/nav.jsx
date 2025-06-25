@@ -17,11 +17,11 @@ const Navigation = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const navLinks = [
-    { to: "/home", label: "Home", icon: <FaHome /> },
+    // { to: "/home", label: "Home", icon: <FaHome /> },
     { to: "/entry", label: "Entry", icon: <FaSignInAlt /> },
     { to: "/exit", label: "Exit", icon: <FaSignOutAlt /> },
     { to: "/garage", label: "Garage", icon: <FaWarehouse /> },
-    { to: "/account", label: "Account", icon: <FaUserCircle /> },
+    // { to: "/account", label: "Account", icon: <FaUserCircle /> },
     { to: "/manager", label: "Manager", icon: <FaUserCog /> },
   ];
 

@@ -79,26 +79,3 @@ body {
 .form-button.primary:hover {
   background-color: #d35400;
 }
-.parking-form {
-  position: relative;
-}
-
-/* .exit-license-error,
-.error-park-lincense,
-.error-park-type {
-  position: absolute;
-  top: 10%;
-  right: 1%;
-  color: var(--error-color);
-  font-size: 0.8rem;
-}
-
-.exit-license-error {
-  top: 18%;
-}
-.error-park-lincense {
-  top: 11%;
-}
-.error-park-type {
-  top: 52%; */
-/* } */

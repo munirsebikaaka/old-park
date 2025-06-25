@@ -17,7 +17,7 @@ import {
   isUpperCaseAdded,
 } from "../services/passwordStrength/passwordStrength";
 
-const SignupForm = () => {
+const SignupForm = ({ setShowSignUp }) => {
   const [values, setValues] = useState({
     fullname: "",
     email: "",
@@ -60,6 +60,7 @@ const SignupForm = () => {
     // if (!isPasswordValid(values.password)) return;
     if (!comparePasswords(values, setErrors)) return;
     createUserDataArrayAndStoreInLocalStorage(values, setValues);
+    setShowSignUp(false);
   };
   return (
     <div className="auth-container">
@@ -352,7 +353,11 @@ const SignupForm = () => {
 
           <div className="auth-footer">
             Already have an account?
-            <a href="#" className="auth-link">
+            <a
+              href="#"
+              onClick={() => setShowSignUp(false)}
+              className="auth-link"
+            >
               Login
             </a>
           </div>

@@ -3,12 +3,12 @@ import Navigation from "../../features/nav";
 import "../../uniqueStyles/applayout.css";
 import Header from "./header";
 
-const AppLayout = () => {
+const AppLayout = ({ user }) => {
   return (
     <div className="layout">
       <Navigation />
       <div className="layout-content">
-        <Header />
+        <Header user={user} />
         <main className="main-section">
           <Outlet />
         </main>

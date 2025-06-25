@@ -3,6 +3,7 @@
   padding: var(--space-lg);
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-sm);
+  font-family: var(--font-family);
 }
 
 .garage-title {
