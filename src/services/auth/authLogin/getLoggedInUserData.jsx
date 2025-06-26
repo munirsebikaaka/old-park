@@ -17,5 +17,6 @@ export const getLoggedInUserAndCheckRequirements = (
     setPasswordError("Wrong password!");
     return false;
   }
+
   return true;
 };

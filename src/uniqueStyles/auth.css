@@ -95,7 +95,8 @@
 .passwordErr,
 .confirmPasswordErr,
 .login-email-error,
-.login-password-error {
+.login-password-error,
+.login-employeeID-error {
   color: #dc2626;
   font-size: 0.85rem;
   margin-bottom: 0.25rem;

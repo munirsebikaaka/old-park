@@ -73,7 +73,8 @@
 
 .error-park-lincense,
 .error-park-type,
-.slot-error {
+.slot-error,
+.exit-license-error {
   font-size: 0.85rem;
   color: #dc2626;
   margin-top: -0.5rem;

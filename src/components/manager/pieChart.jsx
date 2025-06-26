@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 import "../../uniqueStyles/PieChart.css";
+import { useUser } from "../../contexts/UserContext";
 
-// Register necessary parts of Chart.js
+// Register necessary chart features (pie slices, tooltips, and legends)
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ParkingPieChart = () => {
-  // State to hold parsed parking data
   const [parkingData, setParkingData] = useState([]);
+  const { user } = useUser();
 
-  // useEffect will run once when the component is mounted
   useEffect(() => {
-    // Read parking data from localStorage (as a string)
-    const dataFromStorage = localStorage.getItem("parkingData");
+    const dataFromStorage = JSON.parse(localStorage.getItem("parkingData"));
 
     if (dataFromStorage) {
-      // Convert string to JavaScript array
-      const parsedData = JSON.parse(dataFromStorage);
-      setParkingData(parsedData);
-    } else {
-      // If no data is found, log it (optional)
-      console.log("No parking data found in localStorage.");
+      setParkingData(dataFromStorage);
     }
-  }, []); // Empty dependency array = runs once on mount
+  }, []);
 
-  // Count number of each vehicle type
-  const vehicleCounts = parkingData.reduce(
+  const userId = user?.employeeID;
+
+  const userVehicles = parkingData?.filter(
+    (vehicle) => vehicle.identification === userId
+  );
+
+  const vehicleCounts = userVehicles.reduce(
     (acc, item) => {
       const type = item.vehicleType.toLowerCase();
       acc[type] = (acc[type] || 0) + 1;
@@ -36,34 +36,49 @@ const ParkingPieChart = () => {
     { car: 0, truck: 0, motorcycle: 0 }
   );
 
-  // Prepare data for the pie chart
+  // ------------------------------
+  // PIE CHART DATA CONFIGURATION
+  // ------------------------------
+
+  // This defines the data that will be shown in the pie chart
   const data = {
-    labels: ["Cars", "Trucks", "Motorcycles"],
+    labels: ["Cars", "Trucks", "Motorcycles"], // These are the names that will appear in the legend and tooltips
     datasets: [
       {
+        // This array defines the actual values shown in the pie chart
         data: [
-          vehicleCounts.car,
-          vehicleCounts.truck,
-          vehicleCounts.motorcycle,
+          vehicleCounts.car, // Number of cars
+          vehicleCounts.truck, // Number of trucks
+          vehicleCounts.motorcycle, // Number of motorcycles
         ],
-        backgroundColor: ["#e67e22", "#2c3e50", "#7f8c8d"], // Color for each slice
-        borderColor: "#fff", // Slice border color
-        borderWidth: 2,
+        // Background color for each slice (in order)
+        backgroundColor: [
+          "#e67e22", // orange for cars
+          "#2c3e50", // dark blue for trucks
+          "#7f8c8d", // gray for motorcycles
+        ],
+        // Border color for slices
+        borderColor: "#fff", // white borders between slices
+        borderWidth: 2, // thickness of the borders
       },
     ],
   };
 
-  // Chart options for styling
+  // ------------------------------
+  // PIE CHART OPTIONS/SETTINGS
+  // ------------------------------
+
+  // These settings control how the pie chart behaves and looks
   const options = {
-    responsive: true, // Makes chart adjust to screen size
+    responsive: true, // Makes the chart adjust to the container size
     plugins: {
       legend: {
-        position: "top",
+        position: "top", // Shows the legend at the top
         labels: {
-          color: "var(--text-color)",
+          color: "var(--text-color)", // Uses a CSS variable for legend text color
           font: {
-            family: "var(--font-family)",
-            size: 14,
+            family: "var(--font-family)", // Font family from your CSS
+            size: 14, // Font size for legend labels
           },
         },
       },
@@ -73,6 +88,8 @@ const ParkingPieChart = () => {
   return (
     <div className="chart-container">
       <h2 className="chart-title">Vehicle Type Distribution</h2>
+
+      {/* Render the pie chart using the data and options defined above */}
       <Pie data={data} options={options} />
     </div>
   );

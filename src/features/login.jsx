@@ -1,36 +1,44 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../uniqueStyles/auth.css";
 import { IoEye, IoEyeOffSharp } from "react-icons/io5";
+
 import { checkRequirement } from "../services/auth/authLogin/checkRequirements";
 import { checkUserData } from "../services/auth/authLogin/checkUserData";
 import { getLoggedInUserAndCheckRequirements } from "../services/auth/authLogin/getLoggedInUserData";
 
-const LoginForm = ({ setShowApp, setUser, setShowSignUp }) => {
+import { useUser } from "../contexts/UserContext";
+import { getLogedInUser } from "../services/auth/authLogin/getLogedInUser";
+
+const LoginForm = ({ setShowApp, setShowSignUp }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
+    employeeID: "",
   });
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [employeeIDError, setEmployeeIDError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const { setUser } = useUser();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
 
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData")) || [];
-    const logedInUser = userData?.find(
-      (user) => user.identification === "2561234567890"
-    );
-    if (logedInUser) {
-      setUser(logedInUser);
-    }
-  }, []);
-
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    if (!checkRequirement(values, setEmailError, setPasswordError)) return;
+
+    if (
+      !checkRequirement(
+        values,
+        setEmailError,
+        setPasswordError,
+        setEmployeeIDError
+      )
+    )
+      return;
     if (!checkUserData(setEmailError)) return;
     if (
       !getLoggedInUserAndCheckRequirements(
@@ -40,8 +48,9 @@ const LoginForm = ({ setShowApp, setUser, setShowSignUp }) => {
       )
     )
       return;
+
+    getLogedInUser(values, setUser, setShowApp);
     setValues({ email: "", password: "" });
-    setShowApp(true);
   };
 
   return (
@@ -72,8 +81,28 @@ const LoginForm = ({ setShowApp, setUser, setShowSignUp }) => {
           </div>
 
           <div className="form-group">
-            <p className="login-password-error">{passwordError}</p>
+            <p className="login-employeeID-error">{employeeIDError}</p>
+            <label htmlFor="employeeID" className="form-label">
+              Employee ID
+            </label>
+            <input
+              type="text"
+              name="employeeID"
+              onChange={handleChange}
+              value={values.employeeID}
+              id="employeeID"
+              className="form-input"
+              placeholder="2561234567890"
+              style={
+                employeeIDError.length > 0
+                  ? { border: "1px solid  #dc2626" }
+                  : { border: "1px solid #d1d5db" }
+              }
+            />
+          </div>
 
+          <div className="form-group">
+            <p className="login-password-error">{passwordError}</p>
             {showPassword ? (
               <IoEye
                 className="login-password-eye"
@@ -108,6 +137,7 @@ const LoginForm = ({ setShowApp, setUser, setShowSignUp }) => {
             Login
           </button>
 
+          {/* Sign up link */}
           <div className="auth-footer">
             Don't have an account?
             <a

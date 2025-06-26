@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../../uniqueStyles/ParkingLot.css";
 import { IoCloseSharp } from "react-icons/io5";
+import { useUser } from "../../contexts/UserContext";
+
 const TOTAL_SLOTS = 30;
 
 const ParkingLot = () => {
+  const { user } = useUser();
+
   const [parkingData, setParkingData] = useState([]);
 
   useEffect(() => {
@@ -11,8 +15,14 @@ const ParkingLot = () => {
     setParkingData(data);
   }, []);
 
+  const userId = user?.employeeID;
+
+  const userVehicles = parkingData.filter(
+    (vehicle) => vehicle.identification === userId
+  );
+
   const slotMap = Array(TOTAL_SLOTS).fill(null);
-  parkingData.forEach((vehicle) => {
+  userVehicles.forEach((vehicle) => {
     if (vehicle.slot >= 0 && vehicle.slot < TOTAL_SLOTS) {
       slotMap[vehicle.slot] = vehicle;
     }
@@ -38,7 +48,7 @@ const ParkingLot = () => {
               className={`parking-slot ${isOccupied ? "occupied" : "free"}`}
             >
               <div className="slot-label">
-                {isOccupied && <IoCloseSharp />} {!isOccupied && i + 1}
+                {isOccupied ? <IoCloseSharp /> : i + 1}
               </div>
             </div>
           );
