@@ -3,7 +3,7 @@ import "../../uniqueStyles/ParkingLot.css";
 import { IoCloseSharp } from "react-icons/io5";
 import { useUser } from "../../contexts/UserContext";
 
-const TOTAL_SLOTS = 30;
+const TOTAL_SLOTS = 50;
 
 const ParkingLot = () => {
   const { user } = useUser();

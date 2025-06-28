@@ -69,7 +69,8 @@
   user-select: none;
 }
 
-.nav-link {
+.nav-link,
+.navbar button {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
@@ -86,9 +87,18 @@
 }
 
 .nav-link:hover,
-.nav-link.active {
+.nav-link.active,
+.navbar button:hover {
   background-color: var(--accent-color);
   color: var(--primary-color);
+}
+.navbar button {
+  display: flex;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-transform: capitalize;
+  width: 100%;
 }
 
 .nav-icon {

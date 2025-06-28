@@ -9,24 +9,16 @@ import SignupForm from "./features/signup";
 import Applayout from "./components/applayout/applayout";
 import ManagerPage from "./pages/managerPage";
 
-// 🔁 Import the user context
-import { useUser } from "./contexts/UserContext";
-
 function App() {
-  // 🔁 Use global user and setter
-  const { user, setUser } = useUser();
-
   const [showApp, setShowApp] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
-  // Save showApp in localStorage when it changes
   useEffect(() => {
     if (showApp) {
       localStorage.setItem("showApp", true);
     }
   }, [showApp]);
 
-  // Restore showApp from localStorage on page refresh
   useEffect(() => {
     const showApp = localStorage.getItem("showApp");
     if (showApp) {
