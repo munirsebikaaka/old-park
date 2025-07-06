@@ -57,7 +57,6 @@ const VehicleEntryForm = () => {
     <div className="form-container">
       <h2 className="form-title">Vehicle Entry</h2>
       <form className="parking-form" onSubmit={onSubmitHandler}>
-        {/* License Field */}
         <div className="form-group">
           <p className="error-park-lincense">{licenseErorr}</p>
           <label htmlFor="plateNumber" className="form-label">
@@ -77,7 +76,6 @@ const VehicleEntryForm = () => {
           />
         </div>
 
-        {/* Slot Field */}
         <div className="form-group">
           <p className="slot-error">{slotError}</p>
           <label htmlFor="slot" className="form-label">
@@ -97,7 +95,6 @@ const VehicleEntryForm = () => {
           />
         </div>
 
-        {/* Vehicle Type Field */}
         <div className="form-group">
           <p className="error-park-type">{vehicleTypeErorr}</p>
           <label htmlFor="vehicleType" className="form-label">

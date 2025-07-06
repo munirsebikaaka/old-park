@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../../uniqueStyles/ParkingLot.css";
 import { IoCloseSharp } from "react-icons/io5";
 import { useUser } from "../../contexts/UserContext";
 
-const TOTAL_SLOTS = 50;
+const totalSlots = 50;
 
 const ParkingLot = () => {
   const { user } = useUser();
@@ -21,14 +21,14 @@ const ParkingLot = () => {
     (vehicle) => vehicle.identification === userId
   );
 
-  const slotMap = Array(TOTAL_SLOTS).fill(null);
+  const slotMap = Array(totalSlots).fill(null);
   userVehicles.forEach((vehicle) => {
-    if (vehicle.slot >= 0 && vehicle.slot < TOTAL_SLOTS) {
+    if (vehicle.slot >= 0 && vehicle.slot < totalSlots) {
       slotMap[vehicle.slot] = vehicle;
     }
   });
 
-  const isFull = parkingData.length >= TOTAL_SLOTS;
+  const isFull = parkingData.length >= totalSlots;
 
   return (
     <div className="parking-container">

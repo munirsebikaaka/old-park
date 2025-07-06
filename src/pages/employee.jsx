@@ -1,8 +1,8 @@
 import ParkingLot from "../components/manager/parkingLot";
-// import ParkingPieChart from "../components/manager/pieChart";
+import ParkingPieChart from "../components/manager/pieChart";
 import "../uniqueStyles/ManagerPage.css";
 
-const ManagerPage = () => {
+const EmployeePage = () => {
   return (
     <div className="manager-page">
       <div className="manager-body">
@@ -12,4 +12,4 @@ const ManagerPage = () => {
     </div>
   );
 };
-export default ManagerPage;
+export default EmployeePage;

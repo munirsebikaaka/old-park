@@ -7,7 +7,8 @@ import LoginForm from "./features/login";
 import VehicleEntryForm from "./pages/park";
 import SignupForm from "./features/signup";
 import Applayout from "./components/applayout/applayout";
-import ManagerPage from "./pages/managerPage";
+import EmployeePage from "./pages/employee";
+// import EmployeePage from "./pages/managerPage";
 
 function App() {
   const [showApp, setShowApp] = useState(false);
@@ -33,7 +34,6 @@ function App() {
           path="/"
           element={
             showApp ? (
-              // ✅ Pass user through context (no need for props)
               <Applayout />
             ) : showSignUp ? (
               <SignupForm setShowSignUp={setShowSignUp} />
@@ -49,7 +49,7 @@ function App() {
           <Route path="entry" element={<VehicleEntryForm />} />
           <Route path="exit" element={<VehicleExitForm />} />
           <Route path="garage" element={<Garage />} />
-          <Route path="manager" element={<ManagerPage />} />
+          <Route path="manager" element={<EmployeePage />} />
         </Route>
         <Route path="*" element={<h1>no page found ):</h1>} />
       </Routes>

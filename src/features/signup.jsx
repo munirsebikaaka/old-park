@@ -272,44 +272,24 @@ const SignupForm = ({ setShowSignUp }) => {
 
           <div className={"passwordCheck"}>
             <p className="check">
-              {isLowerCaseAdded(values.password) ? (
-                <IoMdCheckmark />
-              ) : (
-                <IoCloseSharp />
-              )}
+              {isLowerCaseAdded(values.password) ? <>✅</> : <>❌</>}
               a-z
             </p>
             <p className="check">
-              {isUpperCaseAdded(values.password) ? (
-                <IoMdCheckmark />
-              ) : (
-                <IoCloseSharp />
-              )}
+              {isUpperCaseAdded(values.password) ? <>✅</> : <>❌</>}
               A-Z
             </p>
             <p className="check">
-              {isNumsAdded(values.password) ? (
-                <IoMdCheckmark />
-              ) : (
-                <IoCloseSharp />
-              )}
+              {isNumsAdded(values.password) ? <>✅</> : <>❌</>}
               0-9
             </p>
             <p className="check">
-              {isSymbolsAdded(values.password) ? (
-                <IoMdCheckmark />
-              ) : (
-                <IoCloseSharp />
-              )}
+              {isSymbolsAdded(values.password) ? <>✅</> : <>❌</>}
               !-&
             </p>
             <p className="check">
-              {isPasswordLengthOk(values.password) ? (
-                <IoMdCheckmark />
-              ) : (
-                <IoCloseSharp />
-              )}
-              strong{" "}
+              {isPasswordLengthOk(values.password) ? <>✅</> : <>❌</>}
+              Strong
             </p>
           </div>
 

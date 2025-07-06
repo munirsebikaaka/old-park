@@ -104,7 +104,17 @@
 .nav-icon {
   font-size: 1.6rem;
 }
-
+.passwordCheck {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  align-items: center;
+  justify-content: space-between;
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .navbar-header {

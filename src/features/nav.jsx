@@ -2,7 +2,6 @@ import "../uniqueStyles/nav.css";
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-// Icons from react-icons
 import {
   FaSignInAlt,
   FaSignOutAlt,
@@ -12,34 +11,19 @@ import {
 import { RiLogoutCircleFill } from "react-icons/ri";
 
 const Navigation = () => {
-  // State to handle if menu is open or closed
   const [menuOpen, setMenuOpen] = useState(false);
-  // const [showApp, setShowApp] = useState(true);
 
-  // useEffect(() => {
-  //   const getShowApp = localStorage.getItem("showApp");
-  //   if (getShowApp) {
-  //     setShowApp(JSON.parse(getShowApp));
-  //   }
-  // }, []);
-
-  // Toggle the menu open or closed
   const handleToggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
   const onLogout = () => {
-    // Clear local storage and redirect to login page
-    // alert("You have successfully logged out");
     localStorage.removeItem("showApp");
-    window.location.href = "/"; // Redirect to the login page
-
-    // window.location.href = "/"; // Redirect to the home page
+    window.location.href = "/";
   };
 
   return (
     <>
-      {/* Header with logo and hamburger menu button */}
       <div className="navbar-header">
         <NavLink to="/home" className="navbar-logo">
           ParkEasy
@@ -52,9 +36,23 @@ const Navigation = () => {
         </button>
       </div>
 
-      {/* Navigation menu */}
       <nav className={`navbar ${menuOpen ? "open" : ""}`}>
         <ul className={`navbar-nav ${menuOpen ? "show" : ""}`}>
+          <li className="nav-item">
+            <NavLink
+              to="/manager"
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "active" : ""}`
+              }
+              onClick={() => setMenuOpen(false)}
+            >
+              <span className="nav-icon">
+                <FaUserCog />
+              </span>
+              <span className="nav-label">Employee</span>
+            </NavLink>
+          </li>
+
           <li className="nav-item">
             <NavLink
               to="/entry"
@@ -100,20 +98,6 @@ const Navigation = () => {
             </NavLink>
           </li>
 
-          <li className="nav-item">
-            <NavLink
-              to="/manager"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-              onClick={() => setMenuOpen(false)}
-            >
-              <span className="nav-icon">
-                <FaUserCog />
-              </span>
-              <span className="nav-label">Manager</span>
-            </NavLink>
-          </li>
           <li className="nav-item">
             <button
               className={({ isActive }) =>
