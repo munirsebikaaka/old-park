@@ -1,5 +1,4 @@
 import { keepLeftVehiclesData } from "./storeLeftVehicles";
-
 const parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
 const startTime = (values) =>
   parkingData.find((el) => el.license === values.license)?.startTime;
