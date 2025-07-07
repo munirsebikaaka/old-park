@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../uniqueStyles/parkingForms.css";
 import { countMoneyPaid } from "../services/exit/countMoney";
+import { toast } from "react-toastify";
 
 const VehicleExitForm = () => {
   const [values, setValues] = useState({ license: "" });
@@ -38,6 +39,7 @@ const VehicleExitForm = () => {
 
     setValues({ license: "" });
     setLicenseError("");
+    toast.success("Vehicle Exit successfully!");
   };
 
   return (

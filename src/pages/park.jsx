@@ -1,36 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../uniqueStyles/parkingForms.css";
-
 import { useUser } from "../contexts/UserContext";
+import { toast } from "react-toastify";
 
 const VehicleEntryForm = () => {
   const { user } = useUser();
+  const userId = user?.employeeID;
 
   const [values, setValues] = useState({
     license: "",
     vehicleType: "",
-    slot: "",
+    selectedSlot: "",
   });
+
   const [vehicleTypeErorr, setVehicleTypeError] = useState("");
   const [licenseErorr, setLicenseError] = useState("");
   const [slotError, setSlotError] = useState("");
+  const [availableSlots, setAvailableSlots] = useState([]);
+
+  useEffect(() => {
+    const parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
+    const totalSlots = 50;
+
+    const usedSlots = parkingData.map((v) => v.slot);
+    const freeSlots = Array.from({ length: totalSlots }, (_, index) =>
+      usedSlots.includes(index) ? null : index
+    ).filter((s) => s !== null);
+
+    setAvailableSlots(freeSlots);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
 
-  const userId = user?.employeeID;
-
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    const { license, vehicleType, slot } = values;
+    const { license, vehicleType, selectedSlot } = values;
 
     if (!license)
       return setLicenseError("Please enter your license plate number");
     setLicenseError("");
 
-    if (!slot) return setSlotError("Please input slot number");
+    if (!selectedSlot) return setSlotError("Please select a slot");
     setSlotError("");
 
     if (!vehicleType)
@@ -40,7 +53,7 @@ const VehicleEntryForm = () => {
     const parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
 
     const newVehicle = {
-      slot: Number(slot) - 1,
+      slot: Number(selectedSlot),
       license,
       vehicleType,
       identification: userId,
@@ -49,8 +62,11 @@ const VehicleEntryForm = () => {
 
     parkingData.push(newVehicle);
     localStorage.setItem("parkingData", JSON.stringify(parkingData));
+    toast.success("Vehicle Parked successfully!");
 
-    setValues({ license: "", vehicleType: "", slot: "" });
+    setValues({ license: "", vehicleType: "", selectedSlot: "" });
+    // Update available slots
+    setAvailableSlots((prev) => prev.filter((s) => s !== Number(selectedSlot)));
   };
 
   return (
@@ -78,21 +94,26 @@ const VehicleEntryForm = () => {
 
         <div className="form-group">
           <p className="slot-error">{slotError}</p>
-          <label htmlFor="slot" className="form-label">
-            Slot
+          <label htmlFor="selectedSlot" className="form-label">
+            Available Slots
           </label>
-          <input
-            type="number"
-            name="slot"
-            onChange={handleChange}
-            value={values.slot}
-            id="slot"
+          <select
+            name="selectedSlot"
+            id="selectedSlot"
             className="form-input"
-            placeholder="Slot number"
+            onChange={handleChange}
+            value={values.selectedSlot}
             style={{
               border: slotError ? "1px solid #dc2626" : "1px solid #d1d5db",
             }}
-          />
+          >
+            <option value="">Select a slot</option>
+            {availableSlots.map((slot) => (
+              <option key={slot} value={slot}>
+                Slot {slot + 1}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">

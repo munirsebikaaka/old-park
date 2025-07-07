@@ -7,28 +7,24 @@ const totalSlots = 50;
 
 const ParkingLot = () => {
   const { user } = useUser();
-
-  const [parkingData, setParkingData] = useState([]);
+  const [parkingSlots, setParkingSlots] = useState([]);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("parkingData")) || [];
-    setParkingData(data);
+    const parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
+
+    const slots = Array.from({ length: totalSlots }, (_, index) => {
+      const occupied = parkingData.find((v) => v.slot === index);
+      return {
+        slotId: index,
+        occupied: !!occupied,
+        vehicle: occupied || null,
+      };
+    });
+
+    setParkingSlots(slots);
   }, []);
 
-  const userId = user?.employeeID;
-
-  const userVehicles = parkingData.filter(
-    (vehicle) => vehicle.identification === userId
-  );
-
-  const slotMap = Array(totalSlots).fill(null);
-  userVehicles.forEach((vehicle) => {
-    if (vehicle.slot >= 0 && vehicle.slot < totalSlots) {
-      slotMap[vehicle.slot] = vehicle;
-    }
-  });
-
-  const isFull = parkingData.length >= totalSlots;
+  const isFull = parkingSlots.every((slot) => slot.occupied);
 
   return (
     <div className="parking-container">
@@ -39,20 +35,16 @@ const ParkingLot = () => {
       )}
 
       <div className="parking-lot">
-        {slotMap.map((vehicle, i) => {
-          const isOccupied = !!vehicle;
-
-          return (
-            <div
-              key={i}
-              className={`parking-slot ${isOccupied ? "occupied" : "free"}`}
-            >
-              <div className="slot-label">
-                {isOccupied ? <IoCloseSharp /> : i + 1}
-              </div>
+        {parkingSlots.map((slot) => (
+          <div
+            key={slot.slotId}
+            className={`parking-slot ${slot.occupied ? "occupied" : "free"}`}
+          >
+            <div className="slot-label">
+              {slot.occupied ? <IoCloseSharp /> : slot.slotId + 1}
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );

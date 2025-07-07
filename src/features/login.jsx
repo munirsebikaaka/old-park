@@ -8,6 +8,7 @@ import { getLoggedInUserAndCheckRequirements } from "../services/auth/authLogin/
 
 import { useUser } from "../contexts/UserContext";
 import { getLogedInUser } from "../services/auth/authLogin/getLogedInUser";
+import { toast } from "react-toastify";
 
 const LoginForm = ({ setShowApp, setShowSignUp }) => {
   const [values, setValues] = useState({
@@ -51,6 +52,7 @@ const LoginForm = ({ setShowApp, setShowSignUp }) => {
 
     getLogedInUser(values, setUser, setShowApp);
     setValues({ email: "", password: "" });
+    toast.success("Login successfully!");
   };
 
   return (

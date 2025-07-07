@@ -8,6 +8,7 @@ import VehicleEntryForm from "./pages/park";
 import SignupForm from "./features/signup";
 import Applayout from "./components/applayout/applayout";
 import EmployeePage from "./pages/employee";
+import { ToastContainer } from "react-toastify";
 // import EmployeePage from "./pages/managerPage";
 
 function App() {
@@ -28,32 +29,35 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            showApp ? (
-              <Applayout />
-            ) : showSignUp ? (
-              <SignupForm setShowSignUp={setShowSignUp} />
-            ) : (
-              <LoginForm
-                setShowApp={setShowApp}
-                setShowSignUp={setShowSignUp}
-              />
-            )
-          }
-        >
-          <Route index element={<Navigate replace to={"manager"} />} />
-          <Route path="entry" element={<VehicleEntryForm />} />
-          <Route path="exit" element={<VehicleExitForm />} />
-          <Route path="garage" element={<Garage />} />
-          <Route path="manager" element={<EmployeePage />} />
-        </Route>
-        <Route path="*" element={<h1>no page found ):</h1>} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              showApp ? (
+                <Applayout />
+              ) : showSignUp ? (
+                <SignupForm setShowSignUp={setShowSignUp} />
+              ) : (
+                <LoginForm
+                  setShowApp={setShowApp}
+                  setShowSignUp={setShowSignUp}
+                />
+              )
+            }
+          >
+            <Route index element={<Navigate replace to={"manager"} />} />
+            <Route path="entry" element={<VehicleEntryForm />} />
+            <Route path="exit" element={<VehicleExitForm />} />
+            <Route path="garage" element={<Garage />} />
+            <Route path="manager" element={<EmployeePage />} />
+          </Route>
+          <Route path="*" element={<h1>no page found ):</h1>} />
+        </Routes>
+      </BrowserRouter>
+      <ToastContainer />
+    </>
   );
 }
 

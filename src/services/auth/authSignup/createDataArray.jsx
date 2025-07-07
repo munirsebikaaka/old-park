@@ -1,6 +1,7 @@
 export const createUserDataArrayAndStoreInLocalStorage = (
   values,
-  setValues
+  setValues,
+  randomNuber
 ) => {
   const {
     fullname,
@@ -10,7 +11,7 @@ export const createUserDataArrayAndStoreInLocalStorage = (
     age,
     sex,
     nationality,
-    employeeID,
+
     password,
   } = values;
   let userData = [];
@@ -23,7 +24,7 @@ export const createUserDataArrayAndStoreInLocalStorage = (
     age: age,
     sex: sex,
     nationality: nationality,
-    employeeID: employeeID,
+    employeeID: randomNuber,
     password: password,
   });
   localStorage.setItem("userData", JSON.stringify(userData));
