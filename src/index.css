@@ -79,3 +79,9 @@ body {
 .form-button.primary:hover {
   background-color: #d35400;
 }
+
+.custom-toast {
+  font-family: var(--font-family);
+  font-size: 1rem;
+  text-align: center;
+}

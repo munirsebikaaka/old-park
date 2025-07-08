@@ -1,37 +1,54 @@
 import { useEffect, useState } from "react";
-import "../../uniqueStyles/ParkingLot.css";
 import { IoCloseSharp } from "react-icons/io5";
 import { useUser } from "../../contexts/UserContext";
+import "../../uniqueStyles/ParkingLot.css";
 
 const totalSlots = 50;
 
 const ParkingLot = () => {
   const { user } = useUser();
+  const userId = user?.employeeID;
+
   const [parkingSlots, setParkingSlots] = useState([]);
 
   useEffect(() => {
-    const parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
+    if (!userId) return;
 
+    const allData = JSON.parse(localStorage.getItem("parkingData")) || {};
+    const userData = allData[userId] || [];
+
+    // Build 50 slots based on current user
     const slots = Array.from({ length: totalSlots }, (_, index) => {
-      const occupied = parkingData.find((v) => v.slot === index);
+      const vehicle = userData.find((v) => v.slot === index);
       return {
         slotId: index,
-        occupied: !!occupied,
-        vehicle: occupied || null,
+        occupied: !!vehicle,
+        vehicle: vehicle || null,
       };
     });
 
     setParkingSlots(slots);
-  }, []);
+  }, [userId]);
+
+  if (!userId) {
+    return (
+      <div className="parking-container">
+        <h2 className="parking-title">Parking Lots</h2>
+        <p>Please log in to view your parking slots.</p>
+      </div>
+    );
+  }
 
   const isFull = parkingSlots.every((slot) => slot.occupied);
 
   return (
     <div className="parking-container">
-      <h2 className="parking-title">Parking Lots</h2>
+      <h2 className="parking-title">My Parking Slots</h2>
 
       {isFull && (
-        <div className="full-message">🚫 All parking slots are occupied.</div>
+        <div className="full-message">
+          🚫 All 50 of your slots are occupied.
+        </div>
       )}
 
       <div className="parking-lot">
@@ -39,6 +56,11 @@ const ParkingLot = () => {
           <div
             key={slot.slotId}
             className={`parking-slot ${slot.occupied ? "occupied" : "free"}`}
+            title={
+              slot.occupied
+                ? `Vehicle: ${slot.vehicle.license}\nType: ${slot.vehicle.vehicleType}`
+                : ""
+            }
           >
             <div className="slot-label">
               {slot.occupied ? <IoCloseSharp /> : slot.slotId + 1}

@@ -53,11 +53,6 @@ const SignupForm = ({ setShowSignUp }) => {
     setValues({ ...values, [name]: value });
   };
 
-  const genEmployId = () => {
-    const employeeId = Math.random() * 10;
-    return employeeId;
-  };
-
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
@@ -65,7 +60,7 @@ const SignupForm = ({ setShowSignUp }) => {
     // if (!isAllValuesAdded(values)) return;
     // if (!isPasswordValid(values.password)) return;
     if (!comparePasswords(values, setErrors)) return;
-    createUserDataArrayAndStoreInLocalStorage(values, setValues, genEmployId());
+    createUserDataArrayAndStoreInLocalStorage(values, setValues);
     setShowSignUp(false);
     toast.success("Sign up successfully!");
   };

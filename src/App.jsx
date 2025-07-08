@@ -56,7 +56,7 @@ function App() {
           <Route path="*" element={<h1>no page found ):</h1>} />
         </Routes>
       </BrowserRouter>
-      <ToastContainer />
+      <ToastContainer position="top-center" toastClassName={"custom-toast"} />
     </>
   );
 }

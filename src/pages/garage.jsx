@@ -4,10 +4,15 @@ import "../uniqueStyles/galage.css";
 const Garage = () => {
   const [parkedVehicles, setParkedVehicle] = useState([]);
   useEffect(() => {
-    const storedVehicles = JSON.parse(localStorage.getItem("parkingData"));
-    if (storedVehicles) {
-      setParkedVehicle(storedVehicles);
-    }
+    const storedVehicles =
+      JSON.parse(localStorage.getItem("parkingData")) || {};
+
+    // Flatten all user vehicle arrays into one array
+    const allParkedVehicles = Object.values(storedVehicles)
+      .filter(Array.isArray)
+      .flat();
+
+    setParkedVehicle(allParkedVehicles);
   }, []);
 
   return (

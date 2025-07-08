@@ -18,20 +18,35 @@ const VehicleExitForm = () => {
     if (!license) {
       return setLicenseError("Please enter your license plate number");
     }
-    const data = parkingData.find((el) => el.license === license);
-    if (!data) {
+
+    let foundData = null;
+
+    // Go through each user's data to find the vehicle
+    for (const userId in parkingData) {
+      const userVehicles = parkingData[userId];
+
+      if (Array.isArray(userVehicles)) {
+        const match = userVehicles.find((el) => el.license === license);
+        if (match) {
+          foundData = match;
+          break;
+        }
+      }
+    }
+
+    if (!foundData) {
       return setLicenseError("License plate not found");
     }
 
-    switch (data.vehicleType) {
+    switch (foundData.vehicleType) {
       case "truck":
-        countMoneyPaid(data, "truck", 2, 3, 3, 2, values);
+        countMoneyPaid(foundData, "truck", 2, 3, 3, 2, values);
         break;
       case "car":
-        countMoneyPaid(data, "car", 1, 2, 2, 1, values);
+        countMoneyPaid(foundData, "car", 1, 2, 2, 1, values);
         break;
       case "motorcycle":
-        countMoneyPaid(data, "motorcycle", 0.5, 1, 1, 0.5, values);
+        countMoneyPaid(foundData, "motorcycle", 0.5, 1, 1, 0.5, values);
         break;
       default:
         alert("Unsupported vehicle type");
@@ -39,7 +54,7 @@ const VehicleExitForm = () => {
 
     setValues({ license: "" });
     setLicenseError("");
-    toast.success("Vehicle Exit successfully!");
+    toast.success("Vehicle left successfully!");
   };
 
   return (

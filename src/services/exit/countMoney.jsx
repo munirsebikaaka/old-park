@@ -1,7 +1,20 @@
 import { keepLeftVehiclesData } from "./storeLeftVehicles";
-const parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
-const startTime = (values) =>
-  parkingData.find((el) => el.license === values.license)?.startTime;
+const startTime = (values) => {
+  const parkingData = JSON.parse(localStorage.getItem("parkingData")) || {};
+
+  for (const userId in parkingData) {
+    const userVehicles = parkingData[userId];
+
+    if (Array.isArray(userVehicles)) {
+      const match = userVehicles.find((el) => el.license === values.license);
+      if (match) {
+        return match.startTime;
+      }
+    }
+  }
+
+  return null; // not found
+};
 
 export const countMoneyPaid = (
   data,
