@@ -1,6 +1,6 @@
 import "../uniqueStyles/nav.css";
-import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import {
   FaSignInAlt,
@@ -12,20 +12,42 @@ import { RiLogoutCircleFill } from "react-icons/ri";
 
 const Navigation = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleToggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen((prev) => !prev);
   };
 
   const onLogout = () => {
+    try {
+      const userRaw = localStorage.getItem("loggedInUser");
+      const user = userRaw ? JSON.parse(userRaw) : null;
+
+      const date = new Date();
+      const logoutTime = `${date.getDate()}/${
+        date.getMonth() + 1
+      }/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+
+      if (user) {
+        localStorage.setItem(
+          "loggedInUser",
+          JSON.stringify({ ...user, logoutTime })
+        );
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+
     localStorage.removeItem("showApp");
-    window.location.href = "/";
+    navigate("/login");
   };
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <>
       <div className="navbar-header">
-        <NavLink to="/home" className="navbar-logo">
+        <NavLink to="/app/manager" className="navbar-logo">
           ParkEasy
         </NavLink>
 
@@ -40,11 +62,11 @@ const Navigation = () => {
         <ul className={`navbar-nav ${menuOpen ? "show" : ""}`}>
           <li className="nav-item">
             <NavLink
-              to="/manager"
+              to="/app/manager"
               className={({ isActive }) =>
                 `nav-link ${isActive ? "active" : ""}`
               }
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
             >
               <span className="nav-icon">
                 <FaUserCog />
@@ -55,11 +77,11 @@ const Navigation = () => {
 
           <li className="nav-item">
             <NavLink
-              to="/entry"
+              to="/app/entry"
               className={({ isActive }) =>
                 `nav-link ${isActive ? "active" : ""}`
               }
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
             >
               <span className="nav-icon">
                 <FaSignInAlt />
@@ -70,11 +92,11 @@ const Navigation = () => {
 
           <li className="nav-item">
             <NavLink
-              to="/exit"
+              to="/app/exit"
               className={({ isActive }) =>
                 `nav-link ${isActive ? "active" : ""}`
               }
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
             >
               <span className="nav-icon">
                 <FaSignOutAlt />
@@ -85,11 +107,11 @@ const Navigation = () => {
 
           <li className="nav-item">
             <NavLink
-              to="/garage"
+              to="/app/garage"
               className={({ isActive }) =>
                 `nav-link ${isActive ? "active" : ""}`
               }
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
             >
               <span className="nav-icon">
                 <FaWarehouse />
@@ -99,16 +121,11 @@ const Navigation = () => {
           </li>
 
           <li className="nav-item">
-            <button
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-              onClick={onLogout}
-            >
+            <button className="nav-link" onClick={onLogout}>
               <span className="nav-icon">
                 <RiLogoutCircleFill />
               </span>
-              <span className="nav-label">logout</span>
+              <span className="nav-label">Logout</span>
             </button>
           </li>
         </ul>

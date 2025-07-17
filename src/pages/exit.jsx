@@ -7,6 +7,7 @@ const VehicleExitForm = () => {
   const [values, setValues] = useState({ license: "" });
   const [licenseError, setLicenseError] = useState("");
   const parkingData = JSON.parse(localStorage.getItem("parkingData")) || [];
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
@@ -21,7 +22,6 @@ const VehicleExitForm = () => {
 
     let foundData = null;
 
-    // Go through each user's data to find the vehicle
     for (const userId in parkingData) {
       const userVehicles = parkingData[userId];
 
@@ -58,12 +58,12 @@ const VehicleExitForm = () => {
   };
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">Vehicle Exit</h2>
-      <form className="parking-form" onSubmit={onSubmitHandler}>
-        <div className="form-group">
-          <p className="exit-license-error">{licenseError}</p>
-          <label htmlFor="exitPlateNumber" className="form-label">
+    <div className="entry-form-wrapper">
+      <h2 className="entry-form-heading">Vehicle Exit</h2>
+      <form className="entry-parking-form" onSubmit={onSubmitHandler}>
+        <div className="entry-form-group">
+          <p className="entry-error-license">{licenseError}</p>
+          <label htmlFor="exitPlateNumber" className="entry-form-label">
             License Plate Number
           </label>
           <input
@@ -72,7 +72,7 @@ const VehicleExitForm = () => {
             onChange={handleChange}
             value={values.license}
             id="exitPlateNumber"
-            className="form-input"
+            className="entry-form-input"
             placeholder="Enter plate number to exit"
             style={
               licenseError.length > 0
@@ -82,7 +82,7 @@ const VehicleExitForm = () => {
           />
         </div>
 
-        <button type="submit" className="form-button primary">
+        <button type="submit" className="entry-form-button primary-btn">
           Process Exit
         </button>
       </form>

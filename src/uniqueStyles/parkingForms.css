@@ -1,104 +1,142 @@
-.form-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: var(--space-lg);
-  background-color: var(--primary-color);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-sm);
-  font-family: var(--font-family);
+/* Root variables assumed to be defined already */
+
+.entry-form-wrapper {
+  background-color: var(--secondary-color);
+  padding: var(--space-xl);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  max-width: 480px;
+  margin: 2rem auto;
+  font-family: var(--font-family), sans-serif;
+  color: var(--text-color);
 }
 
-.form-title {
-  font-size: 1.6rem;
+.entry-form-heading {
+  font-size: 2rem;
+  margin-bottom: var(--space-lg);
   font-weight: 700;
   color: var(--text-color);
-  margin-bottom: var(--space-lg);
   text-align: center;
 }
 
-.parking-form {
+.entry-parking-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  position: relative;
+  gap: var(--space-md);
 }
 
-/* Grouping inputs with labels */
-.form-group {
+.entry-form-group {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  position: absolute;
 }
 
-.form-label {
+.entry-form-label {
   font-weight: 600;
+  font-size: 1rem;
   color: var(--text-color);
-  font-size: 1rem;
 }
 
-.form-input {
-  padding: 0.8rem 1rem;
-  border: 1px solid #d1d5db;
+.entry-form-input,
+.entry-parking-form select {
+  padding: var(--space-sm);
   border-radius: var(--border-radius-sm);
-  font-family: var(--font-family);
+  border: 1px solid var(--medium-text);
   font-size: 1rem;
-  transition: border-color var(--transition-fast);
+  color: var(--text-color);
+  background-color: var(--primary-color);
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-.form-input:focus {
+.entry-form-input:focus,
+.entry-parking-form select:focus {
   outline: none;
   border-color: var(--accent-color);
+  box-shadow: 0 0 5px var(--accent-color);
 }
 
-/* Submit button */
-.form-button.primary {
+.entry-error-license,
+.entry-error-slot,
+.entry-error-vehicle-type {
+  font-size: 0.875rem;
+  color: var(--error-color);
+  min-height: 1.25rem; /* keeps space even if no error */
+}
+
+.entry-form-button {
+  padding: var(--space-sm) var(--space-lg);
   background-color: var(--accent-color);
-  color: #fff;
-  padding: var(--space-sm);
+  color: var(--primary-color);
   border: none;
-  border-radius: var(--border-radius-sm);
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: var(--border-radius-md);
+  font-size: 1.125rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color var(--transition-fast);
-  margin-top: var(--space-md);
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-.form-button.primary:hover {
-  background-color: #d35400;
+.entry-form-button:hover,
+.entry-form-button:focus {
+  background-color: #cf6e1c; /* slightly darker accent */
+  box-shadow: var(--shadow-md);
+  outline: none;
 }
 
-/* Error messages */
-
-.error-park-lincense,
-.error-park-type,
-.slot-error,
-.exit-license-error {
-  font-size: 0.85rem;
-  color: #dc2626;
-  margin-top: -0.5rem;
-  margin-bottom: -0.25rem;
-  position: absolute;
-  right: 1%;
-  top: 55%;
+/* Additional small helper for disabled or error states if needed */
+.entry-form-input[aria-invalid="true"] {
+  border-color: var(--error-color);
+  box-shadow: 0 0 5px var(--error-color);
 }
+/* Base styles (from previous snippet) */
+/* ... (assume the previous styles are here) ... */
 
-/* Mobile responsiveness */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .form-container {
+  .entry-form-wrapper {
+    padding: var(--space-lg);
+    max-width: 90vw;
+    margin: var(--space-lg) auto;
+  }
+
+  .entry-form-heading {
+    font-size: 1.75rem;
+  }
+
+  .entry-form-input,
+  .entry-parking-form select {
+    font-size: 0.95rem;
+    padding: var(--space-xs);
+  }
+
+  .entry-form-button {
+    font-size: 1rem;
+    padding: var(--space-xs) var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .entry-form-wrapper {
     padding: var(--space-md);
+    max-width: 100vw;
+    border-radius: var(--border-radius-md);
+    box-shadow: none; /* flatten on very small */
   }
 
-  .form-title {
-    font-size: 1.4rem;
+  .entry-form-heading {
+    font-size: 1.5rem;
   }
 
-  .form-input {
-    font-size: 0.95rem;
+  .entry-form-input,
+  .entry-parking-form select {
+    font-size: 0.9rem;
+    padding: var(--space-xs);
   }
 
-  .form-button.primary {
-    font-size: 0.95rem;
+  .entry-form-button {
+    font-size: 0.9rem;
+    padding: var(--space-xs) var(--space-sm);
   }
 }

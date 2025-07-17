@@ -1,157 +1,141 @@
 import { useState } from "react";
-import "../uniqueStyles/auth.css";
 import { IoEye, IoEyeOffSharp } from "react-icons/io5";
+import { toast } from "react-toastify";
+import "../uniqueStyles/auth.css";
 
 import { checkRequirement } from "../services/auth/authLogin/checkRequirements";
 import { checkUserData } from "../services/auth/authLogin/checkUserData";
 import { getLoggedInUserAndCheckRequirements } from "../services/auth/authLogin/getLoggedInUserData";
-
-import { useUser } from "../contexts/UserContext";
 import { getLogedInUser } from "../services/auth/authLogin/getLogedInUser";
-import { toast } from "react-toastify";
+import { useUser } from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
-const LoginForm = ({ setShowApp, setShowSignUp }) => {
-  const [values, setValues] = useState({
-    email: "",
-    password: "",
-    employeeID: "",
-  });
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [employeeIDError, setEmployeeIDError] = useState("");
+const LoginForm = () => {
+  const [values, setValues] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const { setUser } = useUser();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    setValues((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error for this field on input change
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
-    if (
-      !checkRequirement(
-        values,
-        setEmailError,
-        setPasswordError,
-        setEmployeeIDError
-      )
-    )
-      return;
-    if (!checkUserData(setEmailError)) return;
-    if (
-      !getLoggedInUserAndCheckRequirements(
-        setEmailError,
-        setPasswordError,
-        values
-      )
-    )
-      return;
+    // Reset errors first
+    setErrors({ email: "", password: "" });
 
-    getLogedInUser(values, setUser, setShowApp);
+    // Validate using your existing logic:
+    const isRequirementsOk = checkRequirement(
+      values,
+      (msg) => setErrors((prev) => ({ ...prev, email: msg })),
+      (msg) => setErrors((prev) => ({ ...prev, password: msg }))
+    );
+    if (!isRequirementsOk) return;
+
+    const isUserDataOk = checkUserData((msg) =>
+      setErrors((prev) => ({ ...prev, email: msg }))
+    );
+    if (!isUserDataOk) return;
+
+    const isLoggedInUserOk = getLoggedInUserAndCheckRequirements(
+      (msg) => setErrors((prev) => ({ ...prev, email: msg })),
+      (msg) => setErrors((prev) => ({ ...prev, password: msg })),
+      values
+    );
+    if (!isLoggedInUserOk) return;
+
+    getLogedInUser(values, setUser);
     setValues({ email: "", password: "" });
     toast.success("Login successfully!");
+    navigate("/app");
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2 className="auth-title">Login to Your Account</h2>
+    <div className="clean-auth-container">
+      <h2 className="clean-auth-title">Login to Your Account</h2>
+      <form className="clean-auth-form" onSubmit={onSubmitHandler} noValidate>
+        <div className="clean-form-group">
+          <label htmlFor="email" className="clean-form-label">
+            Email Address
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={values.email}
+            onChange={handleChange}
+            className={`clean-form-input ${
+              errors.email ? "clean-input-error" : ""
+            }`}
+            placeholder="munir@example.com"
+            autoComplete="username"
+          />
+          {errors.email && (
+            <p className="clean-error-message">{errors.email}</p>
+          )}
+        </div>
 
-        <form className="auth-form" onSubmit={onSubmitHandler}>
-          <div className="form-group">
-            <p className="login-email-error">{emailError}</p>
-            <label htmlFor="loginEmail" className="form-label">
-              Email Address
-            </label>
+        <div className="clean-form-group" style={{ position: "relative" }}>
+          <label htmlFor="password" className="clean-form-label">
+            Password
+          </label>
+          <div className="clean-password-wrapper">
             <input
-              type="email"
-              name="email"
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={values.password}
               onChange={handleChange}
-              value={values.email}
-              id="loginEmail"
-              className="form-input"
-              placeholder="munir@example.com"
-              style={
-                emailError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
+              className={`clean-form-input ${
+                errors.password ? "clean-input-error" : ""
+              }`}
+              placeholder="••••••••"
+              autoComplete="current-password"
             />
-          </div>
-
-          <div className="form-group">
-            <p className="login-employeeID-error">{employeeIDError}</p>
-            <label htmlFor="employeeID" className="form-label">
-              Employee ID
-            </label>
-            <input
-              type="text"
-              name="employeeID"
-              onChange={handleChange}
-              value={values.employeeID}
-              id="employeeID"
-              className="form-input"
-              placeholder="2561234567890"
-              style={
-                employeeIDError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
-            />
-          </div>
-
-          <div className="form-group">
-            <p className="login-password-error">{passwordError}</p>
             {showPassword ? (
               <IoEye
-                className="login-password-eye"
-                onClick={() => setShowPassword(!showPassword)}
+                className="clean-password-toggle"
+                onClick={() => setShowPassword(false)}
+                aria-label="Hide password"
+                role="button"
               />
             ) : (
               <IoEyeOffSharp
-                className="login-password-eye"
-                onClick={() => setShowPassword(!showPassword)}
+                className="clean-password-toggle"
+                onClick={() => setShowPassword(true)}
+                aria-label="Show password"
+                role="button"
               />
             )}
-            <label htmlFor="loginPassword" className="form-label">
-              Password
-            </label>
-            <input
-              type={!showPassword ? "password" : "text"}
-              name="password"
-              onChange={handleChange}
-              value={values.password}
-              id="loginPassword"
-              className="form-input"
-              placeholder="••••••••"
-              style={
-                passwordError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
-            />
           </div>
+          {errors.password && (
+            <p className="clean-error-message">{errors.password}</p>
+          )}
+        </div>
 
-          <button type="submit" className="auth-button primary">
-            Login
+        <button type="submit" className="clean-auth-submit-button">
+          Login
+        </button>
+
+        <p className="clean-auth-footer">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            className="clean-auth-signup-link"
+            onClick={() => navigate("/signup")}
+          >
+            Sign up
           </button>
-
-          {/* Sign up link */}
-          <div className="auth-footer">
-            Don't have an account?
-            <a
-              href="#"
-              onClick={() => setShowSignUp(true)}
-              className="auth-link"
-            >
-              Sign up
-            </a>
-          </div>
-        </form>
-      </div>
+        </p>
+      </form>
     </div>
   );
 };

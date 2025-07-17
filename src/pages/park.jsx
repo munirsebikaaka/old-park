@@ -18,7 +18,6 @@ const VehicleEntryForm = () => {
   const [slotError, setSlotError] = useState("");
   const [availableSlots, setAvailableSlots] = useState([]);
 
-  // Load this employee's slots only
   useEffect(() => {
     if (!userId) return;
 
@@ -56,9 +55,7 @@ const VehicleEntryForm = () => {
     setVehicleTypeError("");
 
     const allData = JSON.parse(localStorage.getItem("parkingData")) || {};
-    console.log("all data", allData);
     const userData = allData[userId] || [];
-    console.log("userData", userData);
 
     // Prevent duplicate slot
     if (userData.some((v) => v.slot === Number(selectedSlot))) {
@@ -87,20 +84,22 @@ const VehicleEntryForm = () => {
 
   if (!userId) {
     return (
-      <div className="form-container">
-        <h2 className="form-title">Vehicle Entry</h2>
-        <p>Please log in to register your vehicle.</p>
+      <div className="entry-form-wrapper">
+        <h2 className="entry-form-heading">Vehicle Entry</h2>
+        <p className="entry-form-message">
+          Please log in to register your vehicle.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">Vehicle Entry</h2>
-      <form className="parking-form" onSubmit={onSubmitHandler}>
-        <div className="form-group">
-          <p className="error-park-lincense">{licenseError}</p>
-          <label htmlFor="plateNumber" className="form-label">
+    <div className="entry-form-wrapper">
+      <h2 className="entry-form-heading">Vehicle Entry</h2>
+      <form className="entry-parking-form" onSubmit={onSubmitHandler}>
+        <div className="entry-form-group">
+          <p className="entry-error-license">{licenseError}</p>
+          <label htmlFor="plateNumber" className="entry-form-label">
             License Plate Number
           </label>
           <input
@@ -109,7 +108,7 @@ const VehicleEntryForm = () => {
             onChange={handleChange}
             value={values.license}
             id="plateNumber"
-            className="form-input"
+            className="entry-form-input"
             placeholder="ABC 1234"
             style={{
               border: licenseError ? "1px solid #dc2626" : "1px solid #d1d5db",
@@ -117,15 +116,15 @@ const VehicleEntryForm = () => {
           />
         </div>
 
-        <div className="form-group">
-          <p className="slot-error">{slotError}</p>
-          <label htmlFor="selectedSlot" className="form-label">
+        <div className="entry-form-group">
+          <p className="entry-error-slot">{slotError}</p>
+          <label htmlFor="selectedSlot" className="entry-form-label">
             Available Slots
           </label>
           <select
             name="selectedSlot"
             id="selectedSlot"
-            className="form-input"
+            className="entry-form-input"
             onChange={handleChange}
             value={values.selectedSlot}
             style={{
@@ -141,14 +140,14 @@ const VehicleEntryForm = () => {
           </select>
         </div>
 
-        <div className="form-group">
-          <p className="error-park-type">{vehicleTypeError}</p>
-          <label htmlFor="vehicleType" className="form-label">
+        <div className="entry-form-group">
+          <p className="entry-error-vehicle-type">{vehicleTypeError}</p>
+          <label htmlFor="vehicleType" className="entry-form-label">
             Vehicle Type
           </label>
           <select
             id="vehicleType"
-            className="form-input"
+            className="entry-form-input"
             name="vehicleType"
             onChange={handleChange}
             value={values.vehicleType}
@@ -165,7 +164,7 @@ const VehicleEntryForm = () => {
           </select>
         </div>
 
-        <button type="submit" className="form-button primary">
+        <button type="submit" className="entry-form-button primary-btn">
           Register Vehicle
         </button>
       </form>

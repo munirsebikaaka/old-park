@@ -1,94 +1,174 @@
-.garage-container {
-  background-color: var(--primary-color);
-  padding: var(--space-lg);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-sm);
-  font-family: var(--font-family);
-}
+/* galage.css */
 
-.garage-title {
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: var(--space-xl);
+.garage-container {
+  padding: var(--space-md);
+  font-family: var(--font-family);
+  background-color: var(--secondary-color);
+  min-height: 100vh;
   color: var(--text-color);
 }
 
-/* Stats Section */
+.garage-title {
+  font-size: 1.6rem;
+  margin-bottom: var(--space-md);
+  text-align: center;
+  color: var(--text-color);
+}
+
+/* --- Stats --- */
 .garage-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: var(--space-lg);
-  margin-bottom: var(--space-xl);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: center;
+  margin-bottom: var(--space-lg);
 }
 
 .stat-card {
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
+  padding: var(--space-sm);
   border-radius: var(--border-radius-md);
-  padding: var(--space-md);
-  text-align: center;
   box-shadow: var(--shadow-sm);
+  text-align: center;
+  width: 130px;
+  transition: transform var(--transition-fast);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
 }
 
 .stat-value {
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 1.3rem;
+  font-weight: 600;
   color: var(--accent-color);
 }
 
 .stat-label {
-  margin-top: var(--space-xs);
-  font-size: 1rem;
   color: var(--medium-text);
-  font-weight: 500;
+  font-size: 0.85rem;
+  margin-top: var(--space-xs);
 }
 
-/* Vehicles Table */
+/* --- Table --- */
 .vehicles-table-container {
   overflow-x: auto;
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-sm);
+  padding-bottom: var(--space-md);
 }
 
 .vehicles-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
   background-color: var(--primary-color);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
 }
 
 .vehicles-table th,
 .vehicles-table td {
+  padding: 0.6rem 0.8rem;
   text-align: left;
-  padding: var(--space-sm);
   border-bottom: 1px solid var(--secondary-color);
+  font-size: 0.9rem;
+  vertical-align: middle;
 }
 
 .vehicles-table th {
-  background-color: var(--secondary-color);
-  color: var(--text-color);
+  background-color: var(--accent-color);
+  color: var(--primary-color);
   font-weight: 600;
 }
 
-.vehicles-table td {
-  font-size: 0.95rem;
-  color: var(--text-color);
+.vehicles-table tr:hover {
+  background-color: #f9f9f9;
 }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .garage-container {
-    padding: var(--space-md);
+/* --- Options Dropdown --- */
+.options-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.options-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: var(--primary-color);
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-lg);
+  z-index: 9999;
+  min-width: 180px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: var(--space-xs);
+  animation: fadeIn var(--transition-medium);
+}
+
+.options-dropdown-item {
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--secondary-color);
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+.options-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.options-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.options-dropdown::-webkit-scrollbar-thumb {
+  background-color: var(--medium-text);
+  border-radius: var(--border-radius-sm);
+}
+.options-dropdown::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Responsive --- */
+@media screen and (max-width: 768px) {
+  .garage-title {
+    font-size: 1.4rem;
   }
 
-  .garage-title {
-    font-size: 1.5rem;
+  .garage-stats {
+    flex-direction: column;
+    align-items: center;
   }
 
   .stat-card {
-    padding: var(--space-sm);
+    width: 100%;
+    max-width: 280px;
   }
 
-  .vehicles-table {
-    font-size: 0.9rem;
+  .vehicles-table th,
+  .vehicles-table td {
+    font-size: 0.8rem;
+    padding: 0.5rem;
+  }
+
+  .options-dropdown {
+    min-width: 150px;
+  }
+
+  .options-dropdown-item {
+    font-size: 0.8rem;
   }
 }

@@ -13,7 +13,7 @@ const startTime = (values) => {
     }
   }
 
-  return null; // not found
+  return null;
 };
 
 export const countMoneyPaid = (

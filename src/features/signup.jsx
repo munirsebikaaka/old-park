@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "../uniqueStyles/auth.css";
-import { IoCloseSharp, IoEye, IoEyeOffSharp } from "react-icons/io5";
-import { IoMdCheckmark } from "react-icons/io";
+import "../uniqueStyles/auth.css"; // updated CSS file with unified styles
+import { IoEye, IoEyeOffSharp } from "react-icons/io5";
+
 import {
   checkIfAllInputsFilled,
   isAllValuesAdded,
@@ -17,8 +17,9 @@ import {
   isUpperCaseAdded,
 } from "../services/passwordStrength/passwordStrength";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-const SignupForm = ({ setShowSignUp }) => {
+const SignupForm = () => {
   const [values, setValues] = useState({
     fullname: "",
     email: "",
@@ -27,7 +28,7 @@ const SignupForm = ({ setShowSignUp }) => {
     age: "",
     sex: "",
     nationality: "",
-    employeeID: "",
+    employeeID: Math.floor(Math.random() * 10000000000).toString(),
     password: "",
     confirmPassword: "",
   });
@@ -47,6 +48,7 @@ const SignupForm = ({ setShowSignUp }) => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,23 +59,24 @@ const SignupForm = ({ setShowSignUp }) => {
     e.preventDefault();
 
     if (!checkIfAllInputsFilled(values, setErrors)) return;
-    // if (!isAllValuesAdded(values)) return;
-    // if (!isPasswordValid(values.password)) return;
     if (!comparePasswords(values, setErrors)) return;
     createUserDataArrayAndStoreInLocalStorage(values, setValues);
-    setShowSignUp(false);
+    navigate("/login");
     toast.success("Sign up successfully!");
   };
+
   return (
-    <div className="auth-container">
+    <div className="clean-auth-container">
       <div className="auth-card">
-        <h2 className="auth-title">Create New Account</h2>
+        <h2 className="clean-auth-title">Create New Account</h2>
 
-        <form className="auth-form" onSubmit={onSubmitHandler}>
-          <div className="form-group">
-            <p className="namesErr">{errors.nameError}</p>
-
-            <label htmlFor="signupName" className="form-label">
+        <form className="clean-auth-form" onSubmit={onSubmitHandler}>
+          {/* Full Name */}
+          <div className="clean-form-group">
+            {errors.nameError && (
+              <p className="clean-error-message">{errors.nameError}</p>
+            )}
+            <label htmlFor="signupName" className="clean-form-label">
               Full Name
             </label>
             <input
@@ -82,20 +85,19 @@ const SignupForm = ({ setShowSignUp }) => {
               value={values.fullname}
               onChange={handleChange}
               id="signupName"
-              className="form-input"
+              className={`clean-form-input ${
+                errors.nameError ? "clean-input-error" : ""
+              }`}
               placeholder="munir ahmed"
-              style={
-                errors.nameError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
             />
           </div>
 
-          <div className="form-group">
-            <p className="emailErr">{errors.signEmailError}</p>
-
-            <label htmlFor="signupEmail" className="form-label">
+          {/* Email Address */}
+          <div className="clean-form-group">
+            {errors.signEmailError && (
+              <p className="clean-error-message">{errors.signEmailError}</p>
+            )}
+            <label htmlFor="signupEmail" className="clean-form-label">
               Email Address
             </label>
             <input
@@ -104,19 +106,19 @@ const SignupForm = ({ setShowSignUp }) => {
               value={values.email}
               onChange={handleChange}
               id="signupEmail"
-              className="form-input"
+              className={`clean-form-input ${
+                errors.signEmailError ? "clean-input-error" : ""
+              }`}
               placeholder="munir@example.com"
-              style={
-                errors.signEmailError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
             />
           </div>
 
-          <div className="form-group">
-            <p className="contactErr">{errors.contactError}</p>
-            <label htmlFor="signupContact" className="form-label">
+          {/* Contact Number */}
+          <div className="clean-form-group">
+            {errors.contactError && (
+              <p className="clean-error-message">{errors.contactError}</p>
+            )}
+            <label htmlFor="signupContact" className="clean-form-label">
               Contact Number
             </label>
             <input
@@ -125,19 +127,21 @@ const SignupForm = ({ setShowSignUp }) => {
               value={values.contact}
               onChange={handleChange}
               id="signupContact"
-              className="form-input"
+              className={`clean-form-input ${
+                errors.contactError ? "clean-input-error" : ""
+              }`}
               placeholder="123-456-7890"
-              style={
-                errors.contactError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
             />
           </div>
 
-          <div className="form-group">
-            <p className="identificationErr">{errors.identificationError}</p>
-            <label htmlFor="signupIdentification" className="form-label">
+          {/* Identification Number */}
+          <div className="clean-form-group">
+            {errors.identificationError && (
+              <p className="clean-error-message">
+                {errors.identificationError}
+              </p>
+            )}
+            <label htmlFor="signupIdentification" className="clean-form-label">
               Identification Number
             </label>
             <input
@@ -146,18 +150,19 @@ const SignupForm = ({ setShowSignUp }) => {
               value={values.identification}
               onChange={handleChange}
               id="signupIdentification"
-              className="form-input"
+              className={`clean-form-input ${
+                errors.identificationError ? "clean-input-error" : ""
+              }`}
               placeholder="123456789"
-              style={
-                errors.identificationError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
             />
           </div>
-          <div className="form-group">
-            <p className="ageErr">{errors.ageError}</p>
-            <label htmlFor="signupAge" className="form-label">
+
+          {/* Age */}
+          <div className="clean-form-group">
+            {errors.ageError && (
+              <p className="clean-error-message">{errors.ageError}</p>
+            )}
+            <label htmlFor="signupAge" className="clean-form-label">
               Age
             </label>
             <input
@@ -166,19 +171,19 @@ const SignupForm = ({ setShowSignUp }) => {
               value={values.age}
               onChange={handleChange}
               id="signupAge"
-              className="form-input"
+              className={`clean-form-input ${
+                errors.ageError ? "clean-input-error" : ""
+              }`}
               placeholder="18"
-              style={
-                errors.ageError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
             />
           </div>
 
-          <div className="form-group">
-            <p className="sexErr">{errors.sexError}</p>
-            <label htmlFor="signupSex" className="form-label">
+          {/* Sex */}
+          <div className="clean-form-group">
+            {errors.sexError && (
+              <p className="clean-error-message">{errors.sexError}</p>
+            )}
+            <label htmlFor="signupSex" className="clean-form-label">
               Sex
             </label>
             <select
@@ -186,12 +191,9 @@ const SignupForm = ({ setShowSignUp }) => {
               value={values.sex}
               onChange={handleChange}
               id="signupSex"
-              className="form-input"
-              style={
-                errors.sexError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
+              className={`clean-form-input ${
+                errors.sexError ? "clean-input-error" : ""
+              }`}
             >
               <option value="">Select your sex</option>
               <option value="male">Male</option>
@@ -199,9 +201,12 @@ const SignupForm = ({ setShowSignUp }) => {
             </select>
           </div>
 
-          <div className="form-group">
-            <p className="nationalityErr">{errors.nationalityError}</p>
-            <label htmlFor="signupNationality" className="form-label">
+          {/* Nationality */}
+          <div className="clean-form-group">
+            {errors.nationalityError && (
+              <p className="clean-error-message">{errors.nationalityError}</p>
+            )}
+            <label htmlFor="signupNationality" className="clean-form-label">
               Nationality
             </label>
             <input
@@ -210,18 +215,19 @@ const SignupForm = ({ setShowSignUp }) => {
               value={values.nationality}
               onChange={handleChange}
               id="signupNationality"
-              className="form-input"
+              className={`clean-form-input ${
+                errors.nationalityError ? "clean-input-error" : ""
+              }`}
               placeholder="Your nationality"
-              style={
-                errors.nationalityError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
             />
           </div>
-          <div className="form-group">
-            <p className="employeeIDErr">{errors.employeeIDError}</p>
-            <label htmlFor="signupEmployeeID" className="form-label">
+
+          {/* Employee ID */}
+          <div className="clean-form-group">
+            {errors.employeeIDError && (
+              <p className="clean-error-message">{errors.employeeIDError}</p>
+            )}
+            <label htmlFor="signupEmployeeID" className="clean-form-label">
               Employee ID
             </label>
             <input
@@ -230,118 +236,126 @@ const SignupForm = ({ setShowSignUp }) => {
               value={values.employeeID}
               onChange={handleChange}
               id="signupEmployeeID"
-              className="form-input"
+              className={`clean-form-input ${
+                errors.employeeIDError ? "clean-input-error" : ""
+              }`}
               placeholder="Your Employee ID"
-              style={
-                errors.employeeIDError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
             />
           </div>
 
-          <div className="form-group">
-            <p className="passwordErr">{errors.signPasswordError}</p>
-            {showPassword ? (
-              <IoEye
-                className="signup-password-eye"
-                onClick={() => setShowPassword(!showPassword)}
-              />
-            ) : (
-              <IoEyeOffSharp
-                className="signup-password-eye"
-                onClick={() => setShowPassword(!showPassword)}
-              />
-            )}
-            <label htmlFor="signupPassword" className="form-label">
+          {/* Password */}
+          <div className="clean-form-group" style={{ position: "relative" }}>
+            <label htmlFor="password" className="clean-form-label">
               Password
             </label>
-            <input
-              type={!showPassword ? "password" : "text"}
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-              id="signupPassword"
-              className="form-input"
-              placeholder="••••••••"
-              style={
-                errors.signPasswordError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
-            />
-          </div>
-
-          <div className={"passwordCheck"}>
-            <p className="check">
-              {isLowerCaseAdded(values.password) ? <>✅</> : <>❌</>}
-              a-z
-            </p>
-            <p className="check">
-              {isUpperCaseAdded(values.password) ? <>✅</> : <>❌</>}
-              A-Z
-            </p>
-            <p className="check">
-              {isNumsAdded(values.password) ? <>✅</> : <>❌</>}
-              0-9
-            </p>
-            <p className="check">
-              {isSymbolsAdded(values.password) ? <>✅</> : <>❌</>}
-              !-&
-            </p>
-            <p className="check">
-              {isPasswordLengthOk(values.password) ? <>✅</> : <>❌</>}
-              Strong
-            </p>
-          </div>
-
-          <div className="form-group">
-            <p className="confirmPasswordErr">{errors.cormfirmPasswordError}</p>
-
-            {showConfirmPassword ? (
-              <IoEye
-                className="signup-confirm-password-eye"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            <div className="clean-password-wrapper">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={values.password}
+                onChange={handleChange}
+                className={`clean-form-input ${
+                  errors.signPasswordError ? "clean-input-error" : ""
+                }`}
+                placeholder="••••••••"
+                autoComplete="current-password"
               />
-            ) : (
-              <IoEyeOffSharp
-                className="signup-confirm-password-eye"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              />
+              {showPassword ? (
+                <IoEye
+                  className="clean-password-toggle"
+                  onClick={() => setShowPassword(false)}
+                  aria-label="Hide password"
+                  role="button"
+                />
+              ) : (
+                <IoEyeOffSharp
+                  className="clean-password-toggle"
+                  onClick={() => setShowPassword(true)}
+                  aria-label="Show password"
+                  role="button"
+                />
+              )}
+            </div>
+            {errors.signPasswordError && (
+              <p className="clean-error-message">{errors.signPasswordError}</p>
             )}
+          </div>
 
-            <label htmlFor="signupConfirmPassword" className="form-label">
+          {/* Password Checks */}
+          <div
+            className="passwordCheck"
+            style={{ marginBottom: "var(--space-md)" }}
+          >
+            <p className="check">
+              {isLowerCaseAdded(values.password) ? "✅" : "❌"} a-z
+            </p>
+            <p className="check">
+              {isUpperCaseAdded(values.password) ? "✅" : "❌"} A-Z
+            </p>
+            <p className="check">
+              {isNumsAdded(values.password) ? "✅" : "❌"} 0-9
+            </p>
+            <p className="check">
+              {isSymbolsAdded(values.password) ? "✅" : "❌"} !-&
+            </p>
+            <p className="check">
+              {isPasswordLengthOk(values.password) ? "✅" : "❌"} Strong
+            </p>
+          </div>
+
+          {/* Confirm Password */}
+          <div className="clean-form-group" style={{ position: "relative" }}>
+            <label htmlFor="confirmPassword" className="clean-form-label">
               Confirm Password
             </label>
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              value={values.confirmPassword}
-              onChange={handleChange}
-              id="signupConfirmPassword"
-              className="form-input"
-              placeholder="••••••••"
-              style={
-                errors.cormfirmPasswordError.length > 0
-                  ? { border: "1px solid  #dc2626" }
-                  : { border: "1px solid #d1d5db" }
-              }
-            />
+            <div className="clean-password-wrapper">
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                value={values.confirmPassword}
+                onChange={handleChange}
+                className={`clean-form-input ${
+                  errors.confirmPassword ? "clean-input-error" : ""
+                }`}
+                placeholder="••••••••"
+                autoComplete="current-password"
+              />
+              {showConfirmPassword ? (
+                <IoEye
+                  className="clean-password-toggle"
+                  onClick={() => setShowConfirmPassword(false)}
+                  aria-label="Hide password"
+                  role="button"
+                />
+              ) : (
+                <IoEyeOffSharp
+                  className="clean-password-toggle"
+                  onClick={() => setShowConfirmPassword(true)}
+                  aria-label="Show password"
+                  role="button"
+                />
+              )}
+            </div>
+            {errors.confirmPassword && (
+              <p className="clean-error-message">{errors.confirmPassword}</p>
+            )}
           </div>
 
-          <button type="submit" className="auth-button primary">
+          <button type="submit" className="clean-auth-submit-button">
             Create Account
           </button>
 
-          <div className="auth-footer">
-            Already have an account?
-            <a
-              href="#"
-              onClick={() => setShowSignUp(false)}
-              className="auth-link"
+          <div className="clean-auth-footer">
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="clean-auth-signup-link"
             >
               Login
-            </a>
+            </button>
           </div>
         </form>
       </div>

@@ -6,7 +6,6 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import "../../uniqueStyles/PieChart.css";
 import { useUser } from "../../contexts/UserContext";
 
-// Register necessary chart features (pie slices, tooltips, and legends)
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ParkingPieChart = () => {
@@ -20,7 +19,6 @@ const ParkingPieChart = () => {
     setParkingData(dataFromStorage);
   }, []);
 
-  // Get only current user's vehicles (already stored by user ID)
   const userVehicles = Array.isArray(parkingData[userId])
     ? parkingData[userId]
     : [];
