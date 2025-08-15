@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../uniqueStyles/auth.css"; // updated CSS file with unified styles
+import "../uniqueStyles/auth.css";
 import { IoEye, IoEyeOffSharp } from "react-icons/io5";
 
 import {
@@ -57,9 +57,8 @@ const SignupForm = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-
     if (!checkIfAllInputsFilled(values, setErrors)) return;
-    if (!comparePasswords(values, setErrors)) return;
+    if (!isAllValuesAdded(values)) return;
     createUserDataArrayAndStoreInLocalStorage(values, setValues);
     navigate("/login");
     toast.success("Sign up successfully!");
@@ -193,8 +192,7 @@ const SignupForm = () => {
               id="signupSex"
               className={`clean-form-input ${
                 errors.sexError ? "clean-input-error" : ""
-              }`}
-            >
+              }`}>
               <option value="">Select your sex</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -285,8 +283,7 @@ const SignupForm = () => {
           {/* Password Checks */}
           <div
             className="passwordCheck"
-            style={{ marginBottom: "var(--space-md)" }}
-          >
+            style={{ marginBottom: "var(--space-md)" }}>
             <p className="check">
               {isLowerCaseAdded(values.password) ? "✅" : "❌"} a-z
             </p>
@@ -348,12 +345,11 @@ const SignupForm = () => {
           </button>
 
           <div className="clean-auth-footer">
-            Already have an account?{" "}
+            Already have an account?
             <button
               type="button"
               onClick={() => navigate("/login")}
-              className="clean-auth-signup-link"
-            >
+              className="clean-auth-signup-link">
               Login
             </button>
           </div>
